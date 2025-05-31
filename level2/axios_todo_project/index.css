@@ -1,0 +1,357 @@
+body {
+    background-color: #C8BFBF;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 
+#header {
+} */
+
+#addBox {
+    width: 300px;
+    height: 400px;
+    background-color: white;
+    border-radius: 25px;
+    border: 2px solid lightgray;
+    box-shadow: 5px 5px 5px #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#addToDo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+}
+
+#submitButton {
+    width: 90%;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    background: linear-gradient(to bottom, #4a90e2, #007aff);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.inputs {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 83%;
+    padding: 12px;
+    margin: 10px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(to bottom, #f5f5f5, #e0e0e0);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.newPosts {
+    width: 300px;
+    height: 500px;
+    background-color: white;
+    border-radius: 25px;
+    border: 2px solid lightgray;
+    box-shadow: 5px 5px 5px #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 50px;
+    border-top: inset 50px #007aff;
+    border-bottom: inset 5px #007aff; 
+    border-left: inset 5px #007aff;   
+    border-right: inset 5px #007aff; 
+}
+
+.newPosts > h2 {
+    margin-top: 80px;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    border-bottom: 2px solid #333;
+    padding-bottom: 5px;
+}
+
+.newPosts > h3 {
+    margin-top: 20px;
+    margin: 5px 0;
+    color: #555;
+    font-size: 16px;
+}
+
+.images {
+    width: 150px;
+    height: 150px;
+}
+
+.buttons {
+    width: 90%;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    background: linear-gradient(to bottom, #4a90e2, #007aff);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.buttons:hover {
+    transition: box-shadow ease-in-out;
+    transition-duration: .4s;
+    box-shadow: 5px 5px 5px#333;
+}
+
+@media (min-width: 768px) {
+    body {
+        background-color: #C8BFBF;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* 
+    #header {
+    } */
+
+    #addBox {
+        width: 300px;
+        height: 400px;
+        background-color: white;
+        border-radius: 25px;
+        border: 2px solid lightgray;
+        box-shadow: 5px 5px 5px #333;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #addToDo {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 10px;
+    }
+
+    #submitButton {
+        width: 90%;
+        padding: 12px;
+        border: none;
+        border-radius: 6px;
+        background: linear-gradient(to bottom, #5c4ae2, #3700ff);
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    .inputs {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 83%;
+        padding: 12px;
+        margin: 10px;
+        border: none;
+        border-radius: 8px;
+        background: linear-gradient(to bottom, #f5f5f5, #e0e0e0);
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .newPosts {
+        width: 300px;
+        height: 500px;
+        background-color: white;
+        border-radius: 25px;
+        border: 2px solid lightgray;
+        box-shadow: 5px 5px 5px #333;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 50px;
+        border-top: inset 50px #5c4ae2;
+        border-bottom: inset 5px #5c4ae2; 
+        border-left: inset 5px #5c4ae2;   
+        border-right: inset 5px #5c4ae2; 
+    }
+
+    .newPosts > h2 {
+        margin-top: 80px;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 5px;
+        border-bottom: 2px solid #333;
+        padding-bottom: 5px;
+    }
+
+    .newPosts > h3 {
+        margin-top: 20px;
+        margin: 5px 0;
+        color: #555;
+        font-size: 16px;
+    }
+
+    .images {
+        width: 150px;
+        height: 150px;
+    }
+
+    .buttons {
+        width: 90%;
+        padding: 12px;
+        border: none;
+        border-radius: 6px;
+        background: linear-gradient(to bottom, #5c4ae2, #3700ff);
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    .buttons:hover {
+        transition: box-shadow ease-in-out;
+        transition-duration: .4s;
+        box-shadow: 5px 5px 5px#333;
+    }
+}
+
+@media (min-width: 1200px) {
+    body {
+        background-color: #C8BFBF;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* 
+    #header {
+    } */
+
+    #addBox {
+        width: 300px;
+        height: 400px;
+        background-color: white;
+        border-radius: 25px;
+        border: 2px solid lightgray;
+        box-shadow: 5px 5px 5px #333;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #addToDo {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 10px;
+    }
+
+    #submitButton {
+        width: 90%;
+        padding: 12px;
+        border: none;
+        border-radius: 6px;
+        background: linear-gradient(to bottom, #3d309c, #2900bb);
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    .inputs {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 83%;
+        padding: 12px;
+        margin: 10px;
+        border: none;
+        border-radius: 8px;
+        background: linear-gradient(to bottom, #f5f5f5, #e0e0e0);
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .newPosts {
+        width: 300px;
+        height: 500px;
+        background-color: white;
+        border-radius: 25px;
+        border: 2px solid lightgray;
+        box-shadow: 5px 5px 5px #333;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 50px;
+        border-top: inset 50px #3d309c;
+        border-bottom: inset 5px #3d309c; 
+        border-left: inset 5px #3d309c;   
+        border-right: inset 5px #3d309c; 
+    }
+
+    .newPosts > h2 {
+        margin-top: 80px;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 5px;
+        border-bottom: 2px solid #333;
+        padding-bottom: 5px;
+    }
+
+    .newPosts > h3 {
+        margin-top: 20px;
+        margin: 5px 0;
+        color: #555;
+        font-size: 16px;
+    }
+
+    .images {
+        width: 150px;
+        height: 150px;
+    }
+
+    .buttons {
+        width: 90%;
+        padding: 12px;
+        border: none;
+        border-radius: 6px;
+        background: linear-gradient(to bottom, #3d309c, #2900bb);
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    .buttons:hover {
+        transition: box-shadow ease-in-out;
+        transition-duration: .4s;
+        box-shadow: 5px 5px 5px#333;
+    }
+}

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+    <html>
+        <head>
+            <link rel="stylesheet" href="styles.css">
+            <script src="index.js" defer></script>
+        </head>
+        <body>
+            <form name="travelForm">
+                First Name: <input name="firstName" placeholder="First Name">
+                Last Name: <input name="lastName" placeholder="Last name">
+                Age: <input name="age" type="number" placeholder="Age">
+                <br>
+                Gender:
+                <br>
+                    Male <input value="male" name="gender" type="radio">
+                    Female <input value="female" name="gender" type="radio">
+                    Other <input value="other" name="gender" type="radio">
+                <br>
+                Destination:
+                <br>
+                    <select name="dest">   
+                        <option value="iceland" name="dest" type="checkbox">Iceland</option>
+                        <option value="hawaii" name="dest" type="checkbox">Hawaii</option>
+                        <option value="southAfrica" name="dest" type="checkbox">South Africa</option>
+                    </select>
+                <br>
+                Dietary Restrictions:
+                <br>
+                    Gluten Free<input value="glutenFree" name="dietary" type="checkbox">
+                    Dairy Free<input value="dairyFree" name="dietary" type="checkbox">
+                    Peanut Free <input value="peanutFree" name="dietary" type="checkbox">
+                    Vegetarian <input value="vegetarian" name="dietary" type="checkbox">
+                    Vegan <input value="vegan" name="dietary" type="checkbox">
+                <br>
+                <button id="submitButton">Submit</button>
+            </form>
+        </body>
+    </html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+    <html>
+        <head>
+            <link rel="stylesheet" href="index.css">
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.9.0/axios.min.js" defer></script>
+            <script src="index.js" defer></script>
+        </head>
+        <body>
+            <h1 id="header">Brendon's Axios To-Do Project</h1>
+            <form name="axiosForm">
+                <div id="addBox">
+                    <h2 id="addToDo">Add To-Do</h2>
+                    <input class="inputs" type="text" name="title" placeholder="title">
+                    <input class="inputs" type="number" name="price" placeholder="price">
+                    <input class="inputs" type="text" name="description" placeholder="description">
+                    <input class="inputs" type="url" name="imgUrl" placeholder="imgURL">
+                    <button id="submitButton" type="submit">Submit</button>
+                </div>
+                <br>
+                <div>
+                    <h2>Scroll through the list below to see your To-Dos</h2>
+                </div>
+                <br>
+                <div id="listBox">
+                </div>
+            </form>
+        </body>
+    </html>

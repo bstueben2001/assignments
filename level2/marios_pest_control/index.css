@@ -1,0 +1,19 @@
+.image {
+    width: 100px;
+    height: auto
+}
+
+.header {
+    font-size: 50px;
+    text-align: center; 
+}
+
+.body {
+    align-content: center;
+}
+
+.footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}

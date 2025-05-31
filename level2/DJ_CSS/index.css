@@ -1,0 +1,89 @@
+#box1 {
+    padding: 30px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    flex-direction: column;
+    background-color: black;
+}
+
+#box2 {
+    padding: 30px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    flex-direction: column;
+    background-color: black;
+}
+
+#box3 {
+    padding: 30px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    flex-direction: column;
+    background-color: black;
+}
+
+#box4 {
+    padding: 30px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    flex-direction: column;
+    background-color: black;
+}
+
+#box5 {
+    padding: 30px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    flex-direction: column;
+    background-color: black;
+}
+
+#box6 {
+    padding: 30px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    flex-direction: column;
+    background-color: black;
+}
+
+#box1:hover{
+    background-color: red;
+    transition: ease-in-out;
+    transition-duration: .5s;
+}
+
+#box2:hover{
+    background-color: orange;
+    transition: ease-out;
+    transition-duration: .5s;
+}
+
+#box3:hover{
+    background-color: yellow;
+    transition: ease-out;
+    transition-duration: .5s;
+}
+
+#box4:hover{
+    background-color: green;
+    transition: ease-out;
+    transition-duration: .5s;
+}
+
+#box5:hover{
+    background-color: blue;
+    transition: ease-out;
+    transition-duration: .5s;
+}
+
+#box6:hover{
+    background-color: purple;
+    transition: ease-out;
+    transition-duration: .5s;
+}
