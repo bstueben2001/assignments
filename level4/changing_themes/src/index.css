@@ -1,36 +1,56 @@
 * {
-    /* background-color: black; */
     text-transform: uppercase;
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     font-weight: lighter;
-    /* color: #75D4FF; */
 }
 
-.app {
+
+html, body {
+    height: 100%;
+}
+
+body {
+    background: linear-gradient(to bottom, #000, #75D4FF);
+}
+
+.light-theme {
+    border: 2px solid #75D4FF;
+    box-shadow: 1px 1px 10px #E9FDFD;
+    color: #75D4FF;
+    box-shadow: 5px 5px 5px #75D4FF;
+}
+
+.dark-theme {
+    border: 2px solid orange;
+    box-shadow: 1px 1px 10px #E9FDFD;
+    color: orange; 
+    box-shadow: 5px 5px 5px orange;
+}
+
+.tron-theme {
+    background: linear-gradient(to bottom, #000, #75D4FF);
+}
+
+.rinzler-theme {
+    background: linear-gradient(to bottom, #000, orange);
+}
+
+div { 
+    padding: 2vh 20vw 2vh 20vw;
+    margin: 20px 0px 0px 0px; 
     display: flex;
     flex-direction: column;
     align-items: center;
     
 }
 
-div, button, li { 
-    padding: 5px 10px; 
-    margin: 5px 0px; 
-    border: 2px solid #75D4FF;
-    box-shadow: 1px 1px 10px #E9FDFD;
-}
-
-
-.light-theme {
-    background-color: linear-gradient(to top, #000, #75D4FF);
-    color: #75D4FF;
-    box-shadow: 5px 5px 5px #75D4FF;
-}
-
-.dark-theme {
-    background-color: linear-gradient(to top, #000, orange);
-    color: orange; 
-    box-shadow: 5px 5px 5px orange;
+button { 
+    padding: 10px 10px; 
+    margin: 10px 20px 0px 20px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.667);
 }
 
 .navbar {
@@ -38,15 +58,14 @@ div, button, li {
     justify-content: space-evenly;
     align-items: center;
     list-style-type: none;
+    padding: 2px 50vw 2px 50vw
 }
 
-.button1 {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
+li {
+    padding: 2px 60px 2px 60px; 
 }
 
-.rectify:hover {
+button:hover {
     color: orange;
     box-shadow: 5px 5px 5px orange;
     color: orange;

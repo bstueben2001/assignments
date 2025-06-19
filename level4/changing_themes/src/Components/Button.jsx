@@ -1,29 +1,22 @@
 import React from 'react';
 import { useContext } from 'react';
-import { ThemeContext } from '../themeContext';
+import { ThemeContext } from '../themeProvider';
 
-export default function Button(props){
+export default function Button({ background, toggleBackground }){
 
-    const {theme} = useContext(ThemeContext)
+    const context = useContext(ThemeContext)
 
     return(
         <div>
-            <button onClick={toggleTheme} className={`${theme}-theme`}>Rectify.changeTheme</button>
+            <button onClick={ () => {
+                context.toggleTheme();
+                toggleBackground();
+            }} 
+                className={`${context.theme}-theme`}
+                >
+                Rectify.changeTheme
+            </button>
         </div>
     )
 
 }
-
-
-
-
-// function Button(props) {
-
-//     const context = useContext(ThemeContext)
-
-//     return (
-//         <button onClick={context.toggleTheme} className={`${context.theme}-theme`}>Rectify.changeTheme</button>
-//     );
-// }
-
-// export default Button;

@@ -1,11 +1,11 @@
 import React from 'react';
+import { ThemeContext } from '../themeProvider';
 import { useContext } from 'react';
-import { ThemeContext } from '../themeContext';
 
 export default function Header(props){
     
     const {theme} = useContext(ThemeContext)
-    console.log({theme})
+    // console.log(theme)
 
     return(
         <div className={`${theme}-theme`}>
@@ -16,22 +16,3 @@ export default function Header(props){
 
 
 }
-
-
-
-
-// function Header(props) {
-
-//     const {theme} = useContext(ThemeContext) //destructured
-//     // console.log(context)
-//     console.log({theme})
-
-//     return (
-//         <div className={`${theme}-theme`}>
-//             <h2>Welcome!</h2>
-//             <h3>{theme} mode</h3>
-//         </div>
-//     );
-// }
-
-// export default Header;
