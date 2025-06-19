@@ -1,0 +1,10 @@
+.callout{
+    background-color: lightblue;
+    border: 1px solid black;
+    width: 400px;
+
+}
+
+.callout > img {
+    width: 200px;
+}

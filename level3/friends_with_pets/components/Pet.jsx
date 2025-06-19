@@ -1,10 +1,10 @@
 
-export default function Pet(props){
+export default function Pet({name, breed}){
 
     return(
         <div>
-            <h3>Pet Name: {props.name}</h3>
-            <p>Breed: {props.breed}</p>
+            <h3>Pet Name: {name}</h3>
+            <p>Breed: {breed}</p>
         </div>
     )
 }

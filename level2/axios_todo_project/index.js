@@ -44,7 +44,42 @@ axios.get(`https://api.vschool.io/brendonstueben/todo`)
 function editFunc(button, container){
     button.addEventListener('click',() => {
         const editId = container.getAttribute('data-id');
-        const updatedObj = toDoInfo()
+        
+        // Save original values from the elements
+        const oldTitle = container.querySelector('h2')?.textContent || "";
+        const oldPrice = container.querySelector('h3')?.textContent.replace("$", "") || "";
+        const oldDescription = container.querySelector('span')?.textContent || "";
+        const oldImgUrl = container.querySelector('img')?.src || "";
+        // Clear original content
+        container.innerHTML = "";
+        // Generates input fields in place of original content. Keeps original values saved above
+        const titleInput = document.createElement('input');
+        titleInput.value = oldTitle;
+        const priceInput = document.createElement('input');
+        priceInput.type = "number";
+        priceInput.value = oldPrice;
+        const descInput = document.createElement('input');
+        descInput.value = oldDescription;
+        const imgUrlInput = document.createElement('input');
+        imgUrlInput.value = oldImgUrl;
+        // save button
+        const saveBtn = document.createElement('button');
+        saveBtn.textContent = "Save";
+        saveBtn.type = "button";
+        // Append values to container
+        container.appendChild(titleInput);
+        container.appendChild(priceInput);
+        container.appendChild(descInput);
+        container.appendChild(imgUrlInput);
+        container.appendChild(saveBtn);
+        // Save button function
+        saveBtn.addEventListener('click', () => {
+            const updatedObj = {
+                title: titleInput.value || oldTitle,
+                price: priceInput.value || oldPrice,
+                description: descInput.value || oldDescription,
+                imgUrl: imgUrlInput.value || oldImgUrl
+            };
     axios.put(`https://api.vschool.io/brendonstueben/todo/${editId}`, updatedObj)
         .then(response => {
             container.innerHTML = ""
@@ -71,7 +106,7 @@ function editFunc(button, container){
         })
         .catch(error => console.log(error))
     })
-}
+})}
 
 
 

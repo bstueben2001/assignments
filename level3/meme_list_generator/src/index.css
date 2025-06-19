@@ -1,0 +1,90 @@
+/* body {
+  display: flex;
+  align-items: center;
+} */
+
+.header {
+    width: 100%;
+    height: 30px;
+    position: relative;
+    bottom: 9px;
+    background: linear-gradient(to right, #7b1fa2, #9c27b0);
+    color: white;
+    border: none;
+    font-weight: bold;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+}
+
+form {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px auto;
+  max-width: 900px;
+}
+
+.inputs {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: #e8f0fe;
+}
+
+.getMeme {
+    /* width: 200px; */
+    background: linear-gradient(to right, #7b1fa2, #9c27b0);
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.getMemeContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.saveButton {
+    background: linear-gradient(to right, #7b1fa2, #9c27b0);
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.meme-container {
+  position: relative;
+  text-align: center;
+  margin: 30px auto;
+  max-width: 600px;
+
+}
+
+/* 
+.meme-container > div {
+    position: relative;
+    right: 10px;
+} */
+
+.meme-container > button {
+    padding: 2px;
+    margin: 2px;
+    margin-top: 8px;
+    background: linear-gradient(to right, #7b1fa2, #9c27b0);
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
