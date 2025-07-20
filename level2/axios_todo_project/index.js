@@ -208,4 +208,3 @@ function getButtons(model, header){
     //switch from button to radio input on completed
     //nest in this order: GET, (POST, EDIT, DELETE)
     //add classes/CSS to created elements in "itemBoxCreator"
-
