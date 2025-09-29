@@ -73,7 +73,7 @@ function handleSubmit(e) {
 //update
   //initiates edit mode and allows input fields and changes
   function handleEditFunc(idToEdit){
-    const itemToEdit = uglyList.find(item => item.id === itemToEdit)
+    const itemToEdit = uglyList.find(item => item._id === idToEdit)
       if (itemToEdit) {
         setUglyInfo({
         imgUrl: itemToEdit.imgUrl,

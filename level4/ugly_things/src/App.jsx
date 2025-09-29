@@ -6,10 +6,15 @@ import Display from './Components/Display.jsx';
 
 
 function AppContent() {
-  const {     
+  const {      
     uglyList,
     handleDeleteFunc,
-    handleEditFunc
+    handleEditFunc,
+    editMode,
+    uglyInfo,
+    handleChange,
+    saveEdit,
+    setEditMode
    } = useContext(ListContext)
       
   return (
@@ -21,8 +26,13 @@ function AppContent() {
           <Display
             key={item._id}
             {...item}
-            handleDeleteFunc={handleDeleteFunc}
             handleEditFunc={handleEditFunc}
+            handleDeleteFunc={handleDeleteFunc}
+            editMode={editMode}
+            uglyInfo={uglyInfo}
+            handleChange={handleChange}
+            saveEdit={saveEdit}
+            setEditMode={setEditMode}
             />
           ))}
         </div>
