@@ -17,9 +17,9 @@ bountyRouter.get("/", (req, res) => {
 
 bountyRouter.post("/", (req, res) => {
   const newBounty = req.body;
-  newBounty.id = uuidv4();
+  newBounty._id = uuidv4();
   bounties.push(newBounty);
-  res.send(`Successfully added ${newBounty.firstName} ${newBounty.lastName} to the database! Here's their ID: ${newBounty.id}`);
+  res.send(`Successfully added ${newBounty.firstName} ${newBounty.lastName} to the database! Here's their ID: ${newBounty._id}`);
 });
 
 module.exports = bountyRouter;
