@@ -1,6 +1,6 @@
 const express = require("express");
 const { v4: uuidv4 } = require("uuid");
-const bounties = require("../Client/bounty-app/src/Components/bountyData");
+const bounties = require("../Server/bountyData");
 
 const bountyRouter = express.Router();
 
@@ -12,7 +12,7 @@ bountyRouter.post("/", (req, res) => {
   const newBounty = req.body;
   newBounty._id = uuidv4();
   bounties.push(newBounty);
-  res.send(`Successfully added ${newBounty.firstName} ${newBounty.lastName} to the database! Here's their ID: ${newBounty._id}`);
+  res.json(newBounty);
 });
 
 bountyRouter.put('/:bountyId', (req, res) => {

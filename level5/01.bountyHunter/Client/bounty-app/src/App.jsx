@@ -1,18 +1,38 @@
-import useBounties from './Components/bountyData'
+import { useState, useEffect } from 'react'
 
 function App() {
-  const [bounties, setBounties] = useBounties()
+  const [bounties, setBounties] = useState([])
+
+  useEffect(() => {
+    fetch('/bounties')
+      .then(res => res.json())
+      .then(data => setBounties(data))
+  }, [])
 
   function addBounty(newBounty) {
-    setBounties([...bounties, { ...newBounty, _id: crypto.randomUUID() }])
+    fetch('/bounties', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newBounty)
+    })
+      .then(res => res.json())
+      .then(created => setBounties([...bounties, created]))
   }
 
   function updateBounty(bountyId, updatedFields) {
-    setBounties(bounties.map(b => b._id === bountyId ? { ...b, ...updatedFields } : b))
+    fetch(`/bounties/${bountyId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedFields)
+    })
+      .then(res => res.json())
+      .then(updated => setBounties(bounties.map(b => b._id === bountyId ? updated : b)))
   }
 
   function deleteBounty(bountyId) {
-    setBounties(bounties.filter(b => b._id !== bountyId))
+    fetch(`/bounties/${bountyId}`, { method: 'DELETE' })
+      .then(res => res.json())
+      .then(remaining => setBounties(remaining))
   }
 
   return (
