@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import Home from './Components/Home.jsx'
+import Navbar from './Components/Navbar.jsx'
+import Bounties from './Components/Bounties.jsx'
 
 function App() {
   const [bounties, setBounties] = useState([])
@@ -38,7 +40,9 @@ function App() {
 
   return (
     <>
+      <Navbar/>
       <Home/>
+      <Bounties bounties={bounties}/>
     </>
   )
 }

@@ -1,17 +1,12 @@
+import Display from './Display.jsx'
 
-
-export default function Bounties(){
-
+export default function Bounties({ bounties }) {
     return (
         <>
-            <div>
-                <h1>Active bounties</h1>
+            <div className="bounties-header">
+                <h1>Active Bounties</h1>
             </div>
-            <div>
-                //pull data using displayFunc
-                //
-            </div>
+            <Display bounties={bounties} />
         </>
     )
-
 }

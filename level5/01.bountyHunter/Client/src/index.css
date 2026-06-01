@@ -66,3 +66,78 @@ body {
   color: #aaa;
   max-width: 500px;
 }
+
+/* Display / Bounty Cards */
+.display {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  padding: 2rem;
+  justify-content: center;
+}
+
+.bounty-card {
+  background-color: #242424;
+  border: 1px solid #333;
+  border-radius: 8px;
+  width: 260px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: border-color 0.2s;
+}
+
+.bounty-card:hover {
+  border-color: #c9a84c;
+}
+
+.bounty-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bounty-name {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.bounty-type {
+  font-size: 0.75rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.bounty-type.sith {
+  background-color: #5a0000;
+  color: #ff6b6b;
+}
+
+.bounty-type.jedi {
+  background-color: #003a5a;
+  color: #6bc5ff;
+}
+
+.bounty-amount {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #c9a84c;
+}
+
+.bounty-status {
+  font-size: 0.85rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.bounty-status.alive {
+  color: #4caf50;
+}
+
+.bounty-status.deceased {
+  color: #888;
+}
