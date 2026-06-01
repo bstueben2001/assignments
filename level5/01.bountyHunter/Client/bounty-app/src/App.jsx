@@ -1,8 +1,7 @@
-import { useState } from 'react'
-import { initialBounties } from './Components/bountyData'
+import useBounties from './Components/bountyData'
 
 function App() {
-  const [bounties, setBounties] = useState(initialBounties)
+  const [bounties, setBounties] = useBounties()
 
   function addBounty(newBounty) {
     setBounties([...bounties, { ...newBounty, _id: crypto.randomUUID() }])
