@@ -10,8 +10,9 @@ function App() {
   useEffect(() => {
     fetch('/bounties')
       .then(res => res.json())
-      .then(data => setBounties(data))
-  }, [])
+      .then(data => {setBounties(data)})
+      .catch(err => console.log(err.response.data.errMsg))
+    }, [])
 
   function addBounty(newBounty) {
     fetch('/bounties', {
