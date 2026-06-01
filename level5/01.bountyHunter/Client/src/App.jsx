@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './Components/Home.jsx'
 import Navbar from './Components/Navbar.jsx'
 import Bounties from './Components/Bounties.jsx'
@@ -39,11 +40,13 @@ function App() {
   }
 
   return (
-    <>
-      <Navbar/>
-      <Home/>
-      <Bounties bounties={bounties}/>
-    </>
+    <BrowserRouter>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/bounties" element={<Bounties bounties={bounties} />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
