@@ -1,0 +1,7 @@
+function extractUniqueCharacters(strings) {
+  
+}
+
+const words = ['apple', 'banana', 'cherry'];
+const uniqueChars = extractUniqueCharacters(words);
+console.log(uniqueChars); // Output: ['a', 'p', 'l', 'e', 'b', 'n', 'c', 'h', 'r', 'y']
