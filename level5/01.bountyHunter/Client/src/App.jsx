@@ -44,7 +44,7 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/bounties" element={<Bounties bounties={bounties} />} />
+        <Route path="/bounties" element={<Bounties bounties={bounties} onAdd={addBounty} onUpdate={updateBounty} onDelete={deleteBounty} />} />
       </Routes>
     </BrowserRouter>
   )
