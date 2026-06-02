@@ -1,15 +1,43 @@
 const express = require("express");
 const { v4: uuidv4 } = require("uuid");
 const bounties = require("../Database/bountyData");
+const Bounty = require('../Models/bounty')
 
 const bountyRouter = express.Router();
 
 //get types
 
+//Mongoose models
+
+bountyRouter.get("/", async(req, res, next) => {
+    try {
+        const foundBounty = await Bounty.find()
+        return res.status(200).send(foundBounty)
+    } catch (error) {
+        res.status(500)
+        return next(error)
+    }
+})
+
+bountyRouter.post("/", async(req, res, next) => {
+    try {
+        const newBounty = new Bounty(req.body)
+        const savedBounty = await newBounty.save()
+        return res.status(201).send(savedBounty)
+    } catch (error) {
+        res.status(500)
+        return next(error)
+    }
+});
+
+
+
+
+
 //get whole array
 bountyRouter.get("/", (req, res) => {
     res.status(200).send(bounties);
-});
+});    
 
 //get one
 bountyRouter.get("/:bountyId", (req, res, next) => {

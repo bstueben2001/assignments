@@ -1,10 +1,26 @@
 const express = require("express")
 const app = express()
 const {v4: uuidv4} = require('uuid')
+const morgan = require('morgan')
+require('dotenv').config()
+const mongoose = require('mongoose')
 
 //app.use is middleware
 
 app.use(express.json())
+app.use(morgan('dev'))
+
+async function connectToDB(){
+    try{
+        console.log("MONGO_URI =", process.env.MONGO_URI)
+        await mongoose.connect(process.env.MONGO_URI)
+        console.log("Connected to DB")
+    }catch(err){
+        console.log(err)
+    }
+}
+
+connectToDB();
 
 app.use("/bounties",require("../Routes/bountyRouter.js"))
 
@@ -17,6 +33,3 @@ app.use((err, req, res, next) => {
 app.listen(9000, () => {
     console.log("Server running on port 9000")
 })
-
-//connection string
-// mongodb+srv://bstueben2001:<db_password>@bstueben.xdtmxov.mongodb.net/
