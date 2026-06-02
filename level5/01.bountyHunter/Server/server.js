@@ -17,3 +17,6 @@ app.use((err, req, res, next) => {
 app.listen(9000, () => {
     console.log("Server running on port 9000")
 })
+
+//connection string
+// mongodb+srv://bstueben2001:<db_password>@bstueben.xdtmxov.mongodb.net/
