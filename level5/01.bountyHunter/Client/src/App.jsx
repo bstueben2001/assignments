@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './Components/Home.jsx'
 import Navbar from './Components/Navbar.jsx'
 import Bounties from './Components/Bounties.jsx'
+import BountyForm from './Components/BountyForm.jsx'
 
 function App() {
   const [bounties, setBounties] = useState([])
@@ -47,6 +48,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/bounties" element={<Bounties bounties={bounties} onAdd={addBounty} onUpdate={updateBounty} onDelete={deleteBounty} />} />
       </Routes>
+      <BountyForm />
     </BrowserRouter>
   )
 }
