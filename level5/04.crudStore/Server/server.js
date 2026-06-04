@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
-require('dotenv').config();
-const inventoryRouter = require('../Routes/inventoryRouter');
+require('dotenv').config({ path: __dirname + '/.env' });
+const inventoryRouter = require('./Routes/inventoryRouter');
 
 const app = express();
 
