@@ -1,94 +1,98 @@
 const express = require("express");
-const { v4: uuidv4 } = require("uuid");
-const bounties = require("../Database/bountyData");
-const Bounty = require('../Models/bounty')
+const Bounty = require('../Models/bounty');
 
 const bountyRouter = express.Router();
 
-//get types
-
-//Mongoose models
-
-bountyRouter.get("/", async(req, res, next) => {
+// Get bounties by type (must come before /:bountyId)
+bountyRouter.get("/search/type", async (req, res, next) => {
     try {
-        const foundBounty = await Bounty.find()
-        return res.status(200).send(foundBounty)
-    } catch (error) {
-        res.status(500)
-        return next(error)
-    }
-})
-
-bountyRouter.post("/", async(req, res, next) => {
-    try {
-        const newBounty = new Bounty(req.body)
-        const savedBounty = await newBounty.save()
-        return res.status(201).send(savedBounty)
-    } catch (error) {
-        res.status(500)
-        return next(error)
-    }
-});
-
-
-
-
-
-//get whole array
-bountyRouter.get("/", (req, res) => {
-    res.status(200).send(bounties);
-});    
-
-//get one
-bountyRouter.get("/:bountyId", (req, res, next) => {
-    const bountyId = req.params.bountyId;
-    const foundBounty = bounties.find(bounty => bounty._id === bounties._id)
-        if(!bounties._id){
-            const error = new Error(`The item with id ${bountyId} was not found`)
-            res.status(500)
-            return next(error)
+        const { type } = req.query;
+        if (!type) {
+            const err = new Error('You must provide a type');
+            res.status(400);
+            return next(err);
         }
-    res.status(200).send(foundBounty)
-});
-
-//get by type
-bountyRouter.get("/search/type", (req, res, next) => {
-    const type = req.query.type;
-        if(!type){
-            const error = new Error(`You must provide a type`)
-            res.status(500)
-            return next(error)
-            }
-    const filteredBounty = bounties.filter(bounty => bounty.type === type)
-    res.status(200).send(filteredBounty)
-});
-
-
-bountyRouter.post("/", (req, res) => {
-  const newBounty = req.body;
-  newBounty._id = uuidv4();
-  bounties.push(newBounty);
-  res.status(201).json(newBounty);
-});
-
-bountyRouter.put('/:bountyId', (req, res) => {
-    const bountyId = req.params.bountyId
-    const updatedObject = req.body
-    const bountyIndex = bounties.findIndex(bounty => bounty._id === bountyId)
-
-    if (bountyIndex !== -1) {
-        const updatedBounty = Object.assign(bounties[bountyIndex], updatedObject)
-        res.status(201).send(updatedBounty)
-    } else {
-        res.status(404).send('Bounty not found')
+        const filtered = await Bounty.find({ type });
+        return res.status(200).send(filtered);
+    } catch (err) {
+        res.status(500);
+        return next(err);
     }
-})
+});
 
-bountyRouter.delete("/:bountyId", (req, res) => {
-    const bountyId = req.params.bountyId
-    const bountyIndex = bounties.findIndex(bounty => bounty._id === bountyId)
-    bounties.splice(bountyIndex, 1)
-    res.send(bounties)
-})
+// Get all bounties
+bountyRouter.get("/", async (req, res, next) => {
+    try {
+        const bounties = await Bounty.find();
+        return res.status(200).send(bounties);
+    } catch (err) {
+        res.status(500);
+        return next(err);
+    }
+});
+
+// Get one bounty by id
+bountyRouter.get("/:bountyId", async (req, res, next) => {
+    try {
+        const bounty = await Bounty.findById(req.params.bountyId);
+        if (!bounty) {
+            const err = new Error(`Bounty with id ${req.params.bountyId} was not found`);
+            res.status(404);
+            return next(err);
+        }
+        return res.status(200).send(bounty);
+    } catch (err) {
+        res.status(500);
+        return next(err);
+    }
+});
+
+// Create a new bounty
+bountyRouter.post("/", async (req, res, next) => {
+    try {
+        const newBounty = new Bounty(req.body);
+        const savedBounty = await newBounty.save();
+        return res.status(201).send(savedBounty);
+    } catch (err) {
+        res.status(500);
+        return next(err);
+    }
+});
+
+// Update a bounty by id
+bountyRouter.put("/:bountyId", async (req, res, next) => {
+    try {
+        const updatedBounty = await Bounty.findByIdAndUpdate(
+            req.params.bountyId,
+            req.body,
+            { new: true }
+        );
+        if (!updatedBounty) {
+            const err = new Error(`Bounty with id ${req.params.bountyId} was not found`);
+            res.status(404);
+            return next(err);
+        }
+        return res.status(200).send(updatedBounty);
+    } catch (err) {
+        res.status(500);
+        return next(err);
+    }
+});
+
+// Delete a bounty by id
+bountyRouter.delete("/:bountyId", async (req, res, next) => {
+    try {
+        const deletedBounty = await Bounty.findByIdAndDelete(req.params.bountyId);
+        if (!deletedBounty) {
+            const err = new Error(`Bounty with id ${req.params.bountyId} was not found`);
+            res.status(404);
+            return next(err);
+        }
+        return res.status(200).send(deletedBounty);
+    } catch (err) {
+        res.status(500);
+        return next(err);
+    }
+});
 
 module.exports = bountyRouter;
