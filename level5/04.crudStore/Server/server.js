@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
+const inventoryRouter = require('../Routes/inventoryRouter');
 
 const app = express();
 
@@ -9,6 +10,7 @@ mongoose.connect(process.env.MONGO_URI)
   .catch((err) => console.error('MongoDB connection error:', err));
 
 app.use(express.json());
+app.use('/inventory', inventoryRouter);
 
 app.get('/', (req, res) => {
   res.send('Server is running');
