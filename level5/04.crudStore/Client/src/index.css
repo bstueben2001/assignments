@@ -36,6 +36,7 @@ body {
   color: #ecf0f1;
   text-decoration: none;
   font-size: 1rem;
+  cursor: pointer;
 }
 
 .navbar-links a:hover {
