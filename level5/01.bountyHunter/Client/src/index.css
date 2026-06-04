@@ -123,18 +123,16 @@ body {
 
 /* Display / Bounty Cards */
 .display {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 1.5rem;
   padding: 2rem;
-  justify-content: center;
 }
 
 .bounty-card {
   background-color: #242424;
   border: 1px solid #333;
   border-radius: 8px;
-  width: 260px;
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
