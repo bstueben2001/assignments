@@ -5,8 +5,8 @@
 }
 
 body {
-  background-color: #1a1a1a;
-  color: #e0e0e0;
+  background-color: #141810;
+  color: #d4cfc5;
   font-family: 'Segoe UI', sans-serif;
 }
 
@@ -16,14 +16,14 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 1rem 2rem;
-  background-color: #111;
-  border-bottom: 2px solid #c9a84c;
+  background-color: #0d0f0a;
+  border-bottom: 2px solid #c4a87a;
 }
 
 .navbar-brand {
   font-size: 1.4rem;
   font-weight: bold;
-  color: #c9a84c;
+  color: #c4a87a;
   letter-spacing: 0.05em;
 }
 
@@ -34,14 +34,14 @@ body {
 }
 
 .navbar-links a {
-  color: #e0e0e0;
+  color: #d4cfc5;
   text-decoration: none;
   font-size: 1rem;
   transition: color 0.2s;
 }
 
 .navbar-links a:hover {
-  color: #c9a84c;
+  color: #c4a87a;
 }
 
 /* Bounties page */
@@ -53,12 +53,12 @@ body {
 }
 
 .bounties-header h1 {
-  color: #c9a84c;
+  color: #c4a87a;
 }
 
 .btn-new-bounty {
-  background-color: #c9a84c;
-  color: #111;
+  background-color: #c4a87a;
+  color: #0d0f0a;
   border: none;
   border-radius: 4px;
   padding: 0.5rem 1.1rem;
@@ -78,16 +78,16 @@ body {
   gap: 0.75rem;
   align-items: center;
   padding: 1.25rem 2rem;
-  background-color: #242424;
-  border-bottom: 1px solid #333;
+  background-color: #1e261a;
+  border-bottom: 1px solid #2d3a24;
 }
 
 .add-bounty-form input,
 .add-bounty-form select {
-  background-color: #1a1a1a;
-  border: 1px solid #444;
+  background-color: #141810;
+  border: 1px solid #3a4a30;
   border-radius: 4px;
-  color: #e0e0e0;
+  color: #d4cfc5;
   padding: 0.4rem 0.6rem;
   font-size: 0.9rem;
 }
@@ -95,7 +95,7 @@ body {
 .add-bounty-form input:focus,
 .add-bounty-form select:focus {
   outline: none;
-  border-color: #c9a84c;
+  border-color: #c4a87a;
 }
 
 /* Home */
@@ -111,13 +111,13 @@ body {
 
 .home h1 {
   font-size: 3rem;
-  color: #c9a84c;
+  color: #c4a87a;
   margin-bottom: 1rem;
 }
 
 .home p {
   font-size: 1.2rem;
-  color: #aaa;
+  color: #8a8578;
   max-width: 500px;
 }
 
@@ -130,8 +130,8 @@ body {
 }
 
 .bounty-card {
-  background-color: #242424;
-  border: 1px solid #333;
+  background-color: #1e261a;
+  border: 1px solid #2d3a24;
   border-radius: 8px;
   padding: 1.25rem;
   display: flex;
@@ -141,7 +141,7 @@ body {
 }
 
 .bounty-card:hover {
-  border-color: #c9a84c;
+  border-color: #c4a87a;
 }
 
 .bounty-card-header {
@@ -164,19 +164,19 @@ body {
 }
 
 .bounty-type.sith {
-  background-color: #5a0000;
-  color: #ff6b6b;
+  background-color: #4a1208;
+  color: #e05a3a;
 }
 
 .bounty-type.jedi {
-  background-color: #003a5a;
-  color: #6bc5ff;
+  background-color: #1a3a20;
+  color: #7dc47a;
 }
 
 .bounty-amount {
   font-size: 1.4rem;
   font-weight: bold;
-  color: #c9a84c;
+  color: #c4a87a;
 }
 
 .bounty-status {
@@ -187,11 +187,11 @@ body {
 }
 
 .bounty-status.alive {
-  color: #4caf50;
+  color: #5a9e5a;
 }
 
 .bounty-status.deceased {
-  color: #888;
+  color: #6b6558;
 }
 
 .bounty-card-actions {
@@ -216,23 +216,23 @@ body {
 }
 
 .btn-edit {
-  background-color: #2a4a6b;
-  color: #6bc5ff;
+  background-color: #2a4a30;
+  color: #7dc47a;
 }
 
 .btn-delete {
-  background-color: #5a0000;
-  color: #ff6b6b;
+  background-color: #4a1208;
+  color: #e05a3a;
 }
 
 .btn-save {
-  background-color: #1a4a1a;
-  color: #4caf50;
+  background-color: #1a3a24;
+  color: #5a9e5a;
 }
 
 .btn-cancel {
-  background-color: #333;
-  color: #aaa;
+  background-color: #2d3a24;
+  color: #8a8578;
 }
 
 /* Inline edit form */
@@ -244,10 +244,10 @@ body {
 
 .bounty-edit-form input,
 .bounty-edit-form select {
-  background-color: #1a1a1a;
-  border: 1px solid #444;
+  background-color: #141810;
+  border: 1px solid #3a4a30;
   border-radius: 4px;
-  color: #e0e0e0;
+  color: #d4cfc5;
   padding: 0.35rem 0.5rem;
   font-size: 0.85rem;
   width: 100%;
@@ -256,7 +256,7 @@ body {
 .bounty-edit-form input:focus,
 .bounty-edit-form select:focus {
   outline: none;
-  border-color: #c9a84c;
+  border-color: #c4a87a;
 }
 
 .edit-living-label {
@@ -264,7 +264,7 @@ body {
   align-items: center;
   gap: 0.5rem;
   font-size: 0.85rem;
-  color: #aaa;
+  color: #8a8578;
 }
 
 .edit-living-label input {
