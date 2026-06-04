@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import rockyImg from '../assets/rocky.png';
 
 function Inventory() {
   const [items, setItems] = useState([]);
@@ -11,9 +12,10 @@ function Inventory() {
       .catch(err => setError(err.message));
   }, []);
 
-  if (error) return <p className="inventory-error">Failed to load inventory: {error}</p>;
+  if (error) return <div className="inventory-page"><p className="inventory-error">Failed to load inventory: {error}</p></div>;
 
   return (
+    <div className="inventory-page">
     <section className="inventory">
       <h2>Inventory</h2>
       {items.length === 0 ? (
@@ -30,6 +32,8 @@ function Inventory() {
         </div>
       )}
     </section>
+    <img src={rockyImg} className="rocky-rolling" alt="" />
+    </div>
   );
 }
 

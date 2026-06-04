@@ -1,3 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Rajdhani:wght@400;500;600&display=swap');
+
+:root {
+  --space-black: #050a14;
+  --space-navy: #0d1b2e;
+  --space-card: #0f2035;
+  --astrophage-gold: #e8a020;
+  --astrophage-glow: rgba(232, 160, 32, 0.15);
+  --console-blue: #29d4f5;
+  --text-light: #c8ddf0;
+  --text-dim: #6a8aaa;
+  --border: rgba(232, 160, 32, 0.25);
+
+  /* Rocky */
+  --rocky-shell: #160b03;
+  --rocky-card: #1f0e04;
+  --rocky-ridge: #2e1608;
+  --rocky-bio: #d47010;
+  --rocky-bio-bright: #f0920a;
+  --rocky-glow: rgba(212, 112, 16, 0.22);
+  --rocky-border: rgba(180, 85, 12, 0.35);
+  --rocky-text: #c8956a;
+  --rocky-text-dim: #7a5035;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -5,9 +30,14 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
-  color: #333;
+  font-family: 'Rajdhani', sans-serif;
+  background-color: var(--space-black);
+  background-image:
+    radial-gradient(ellipse at 50% 40%, rgba(160, 0, 0, 0.18) 0%, transparent 65%),
+    radial-gradient(ellipse at 20% 80%, rgba(41, 212, 245, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(232, 160, 32, 0.04) 0%, transparent 50%);
+  color: var(--text-light);
+  min-height: 100vh;
 }
 
 /* Navbar */
@@ -15,15 +45,18 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #2c3e50;
+  background-color: rgba(13, 27, 46, 0.95);
+  border-bottom: 1px solid var(--border);
   padding: 0 2rem;
   height: 60px;
+  backdrop-filter: blur(8px);
 }
 
 .navbar-brand {
-  color: #fff;
-  font-size: 1.4rem;
-  font-weight: bold;
+  color: var(--astrophage-gold);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
 }
 
 .navbar-links {
@@ -33,43 +66,98 @@ body {
 }
 
 .navbar-links a {
-  color: #ecf0f1;
+  color: var(--text-light);
   text-decoration: none;
   font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
   cursor: pointer;
+  transition: color 0.2s;
 }
 
 .navbar-links a:hover {
-  color: #3498db;
+  color: var(--console-blue);
 }
 
 /* Home */
 .home {
-  max-width: 800px;
-  margin: 4rem auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 60px);
+  overflow: hidden;
   text-align: center;
 }
 
-.home h1 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-}
-
-.home p {
-  font-size: 1.1rem;
-  color: #666;
-}
-
-/* Inventory */
-.inventory {
-  max-width: 1100px;
-  margin: 2rem auto;
+.home-content {
+  position: relative;
+  z-index: 1;
   padding: 0 1rem;
 }
 
+.home h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2rem;
+  color: #ffffff;
+  margin-bottom: 1rem;
+  letter-spacing: 0.05em;
+}
+
+.home p {
+  font-size: 1.15rem;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.6;
+}
+
+/* Astrophage sparkles */
+.sparkle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: rgba(255, 45, 35, 0.9);
+  box-shadow: 0 0 3px 1px rgba(255, 30, 20, 0.5);
+  animation: twinkle ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+.sparkle:nth-child(3n)   { background: rgba(255, 70, 55, 0.8); box-shadow: 0 0 4px 1px rgba(255, 50, 40, 0.4); }
+.sparkle:nth-child(3n+1) { background: rgba(220, 20, 15, 0.95); box-shadow: 0 0 3px 1px rgba(200, 10, 10, 0.5); }
+.sparkle:nth-child(5n)   { width: 3px; height: 3px; background: rgba(255, 55, 40, 1); box-shadow: 0 0 5px 2px rgba(255, 30, 20, 0.6); }
+.sparkle:nth-child(7n)   { width: 1px; height: 1px; background: rgba(255, 90, 70, 0.7); }
+
+@keyframes twinkle {
+  0%   { opacity: 1;   transform: scale(1); }
+  50%  { opacity: 0.1; transform: scale(0.6); }
+  100% { opacity: 0.8; transform: scale(1.2); }
+}
+
+/* Inventory — Rocky themed */
+.inventory-page {
+  position: relative;
+  overflow-x: hidden;
+  background:
+    radial-gradient(ellipse at 30% 60%, rgba(140, 55, 5, 0.14) 0%, transparent 60%),
+    radial-gradient(ellipse at 75% 30%, rgba(100, 35, 3, 0.10) 0%, transparent 55%);
+  min-height: calc(100vh - 60px);
+  padding-bottom: 180px;
+}
+
+.inventory {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 0;
+}
+
 .inventory h2 {
-  font-size: 1.6rem;
-  margin-bottom: 1.5rem;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.3rem;
+  color: var(--rocky-bio);
+  margin-bottom: 1.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-shadow: 0 0 12px var(--rocky-glow);
 }
 
 .inventory-grid {
@@ -79,34 +167,81 @@ body {
 }
 
 .inventory-card {
-  background: #fff;
-  border-radius: 8px;
+  background: var(--rocky-card);
+  border: 1px solid var(--rocky-border);
+  border-top: 2px solid rgba(212, 112, 16, 0.5);
+  border-radius: 4px;
   padding: 1.25rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+  position: relative;
+}
+
+.inventory-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  background: linear-gradient(135deg, rgba(46, 22, 8, 0.6) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.inventory-card:hover {
+  background: #261005;
+  border-color: var(--rocky-bio);
+  border-top-color: var(--rocky-bio-bright);
+  box-shadow: 0 0 20px var(--rocky-glow), inset 0 0 12px rgba(212, 112, 16, 0.06);
 }
 
 .inventory-card h3 {
   font-size: 1.1rem;
-  margin: 0;
+  font-weight: 600;
+  color: var(--rocky-text);
+  position: relative;
 }
 
 .inventory-card p {
-  font-size: 0.9rem;
-  color: #666;
+  font-size: 0.95rem;
+  color: var(--rocky-text-dim);
   flex: 1;
+  line-height: 1.5;
+  position: relative;
 }
 
 .inventory-price {
   font-size: 1rem;
-  font-weight: bold;
-  color: #2c3e50;
+  font-weight: 700;
+  color: var(--rocky-bio-bright);
+  letter-spacing: 0.03em;
+  text-shadow: 0 0 8px var(--rocky-glow);
+  position: relative;
 }
 
 .inventory-empty,
 .inventory-error {
-  color: #888;
+  color: var(--rocky-text-dim);
   font-size: 1rem;
+}
+
+/* Rocky rolling */
+.rocky-rolling {
+  position: absolute;
+  bottom: -25px;
+  left: 0;
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  pointer-events: none;
+  animation: rocky-roll 14s linear infinite;
+}
+
+@keyframes rocky-roll {
+  from {
+    transform: translateX(-180px) rotate(0deg);
+  }
+  to {
+    transform: translateX(calc(100vw + 180px)) rotate(1260deg);
+  }
 }
