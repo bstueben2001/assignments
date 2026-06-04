@@ -8,9 +8,9 @@ inventoryRouter.get('/', async (req, res, next) => {
     try {
         const items = await Inventory.find();
         return res.status(200).send(items);
-    } catch (error) {
+    } catch (err) {
         res.status(500);
-        return next(error);
+        return next(err);
     }
 });
 
@@ -19,14 +19,14 @@ inventoryRouter.get('/:itemId', async (req, res, next) => {
     try {
         const item = await Inventory.findById(req.params.itemId);
         if (!item) {
-            const error = new Error(`Item with id ${req.params.itemId} was not found`);
+            const err = new Error(`Item with id ${req.params.itemId} was not found`);
             res.status(404);
-            return next(error);
+            return next(err);
         }
         return res.status(200).send(item);
-    } catch (error) {
+    } catch (err) {
         res.status(500);
-        return next(error);
+        return next(err);
     }
 });
 
@@ -36,9 +36,9 @@ inventoryRouter.post('/', async (req, res, next) => {
         const newItem = new Inventory(req.body);
         const savedItem = await newItem.save();
         return res.status(201).send(savedItem);
-    } catch (error) {
+    } catch (err) {
         res.status(500);
-        return next(error);
+        return next(err);
     }
 });
 
@@ -51,14 +51,14 @@ inventoryRouter.put('/:itemId', async (req, res, next) => {
             { new: true }
         );
         if (!updatedItem) {
-            const error = new Error(`Item with id ${req.params.itemId} was not found`);
+            const err = new Error(`Item with id ${req.params.itemId} was not found`);
             res.status(404);
-            return next(error);
+            return next(err);
         }
         return res.status(200).send(updatedItem);
-    } catch (error) {
+    } catch (err) {
         res.status(500);
-        return next(error);
+        return next(err);
     }
 });
 
@@ -67,14 +67,14 @@ inventoryRouter.delete('/:itemId', async (req, res, next) => {
     try {
         const deletedItem = await Inventory.findByIdAndDelete(req.params.itemId);
         if (!deletedItem) {
-            const error = new Error(`Item with id ${req.params.itemId} was not found`);
+            const err = new Error(`Item with id ${req.params.itemId} was not found`);
             res.status(404);
-            return next(error);
+            return next(err);
         }
         return res.status(200).send(deletedItem);
-    } catch (error) {
+    } catch (err) {
         res.status(500);
-        return next(error);
+        return next(err);
     }
 });
 
