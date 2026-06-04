@@ -2,7 +2,7 @@ function Home() {
   return (
     <main className="home">
       <h1>Welcome to CRUD Store</h1>
-      <p>Browse and manage your inventory below.</p>
+      <p>Your stop for all basic items</p>
     </main>
   );
 }
