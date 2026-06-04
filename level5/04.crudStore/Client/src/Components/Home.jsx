@@ -1,10 +1,19 @@
-const SPARKLES = Array.from({ length: 350 }, (_, i) => ({
-  id: i,
-  left: `${((i * 137.508) % 100).toFixed(2)}%`,
-  top: `${((i * 97.3) % 100).toFixed(2)}%`,
-  delay: `${((i * 0.37) % 5).toFixed(2)}s`,
-  duration: `${(2 + (i * 0.23) % 3).toFixed(2)}s`,
-}));
+const COLS = 15;
+const ROWS = 11;
+const CELL_W = 100 / COLS;
+const CELL_H = 100 / ROWS;
+
+const SPARKLES = Array.from({ length: COLS * ROWS }, (_, i) => {
+  const col = i % COLS;
+  const row = Math.floor(i / COLS);
+  return {
+    id: i,
+    left: `${(col * CELL_W + (i * 2.718) % CELL_W).toFixed(2)}%`,
+    top: `${(row * CELL_H + (i * 1.618) % CELL_H).toFixed(2)}%`,
+    delay: `${((i * 0.37) % 5).toFixed(2)}s`,
+    duration: `${(2 + (i * 0.23) % 3).toFixed(2)}s`,
+  };
+});
 
 function Home() {
   return (
@@ -22,8 +31,8 @@ function Home() {
         />
       ))}
       <div className="home-content">
-        <h1>Welcome to CRUD Store</h1>
-        <p>Your stop for all basic items</p>
+        <h1>Welcome to the Hail Mary Inventory Manifest [HMIM]</h1>
+        <p>Please navigate to the Inventory tab to view manifest.</p>
       </div>
     </main>
   );
