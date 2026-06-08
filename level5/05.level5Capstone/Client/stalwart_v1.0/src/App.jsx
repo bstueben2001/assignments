@@ -11,11 +11,13 @@ import DiplomacyDashboard    from './Components/CouncilAssets/DiplomacyAdvisor/D
 import EconomicDashboard     from './Components/CouncilAssets/EconomicAdvisor/EconomicDashboard';
 import RomanticDashboard     from './Components/CouncilAssets/RomanticAdvisor/RomanticDashboard';
 import EntertainmentDashboard from './Components/CouncilAssets/EntertainmentAdvisor/EntertainmentDashboard';
+import Embers from './Components/Embers';
 
 function App() {
   return (
     <AppProvider>
       <BrowserRouter>
+        <Embers />
         <Navbar />
         <main className="content-area">
         <Routes>

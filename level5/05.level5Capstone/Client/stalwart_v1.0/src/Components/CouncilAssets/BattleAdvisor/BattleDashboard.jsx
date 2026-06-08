@@ -20,9 +20,66 @@ function formatDate(dateKey) {
   });
 }
 
+function BattleEnemyItem({ item, onEdit, onDelete }) {
+  const [editing, setEditing] = useState(false);
+  const [form, setForm] = useState({
+    title:       item.title,
+    difficulty:  item.difficulty ?? 'Minion',
+    date:        item.date,
+    description: item.description || '',
+  });
+
+  const diffColor = DIFFICULTY_COLORS[form.difficulty] ?? DIFFICULTY_COLORS.Minion;
+
+  function handleSave(e) {
+    e.preventDefault();
+    if (!form.title.trim()) return;
+    onEdit(item.id, { title: form.title.trim(), difficulty: form.difficulty, date: form.date, description: form.description });
+    setEditing(false);
+  }
+
+  if (editing) {
+    return (
+      <form className="dashboard-item goal-edit-form" style={{ '--advisor-color': '#e05c5c' }} onSubmit={handleSave}>
+        <input className="dashboard-input goal-edit-input" type="text" value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} autoFocus />
+        <select
+          className="dashboard-input dashboard-input--difficulty goal-edit-input"
+          value={form.difficulty}
+          onChange={e => setForm(f => ({ ...f, difficulty: e.target.value }))}
+          style={{ '--diff-color': diffColor }}
+        >
+          {DIFFICULTIES.map(d => <option key={d} value={d}>{d}</option>)}
+        </select>
+        <input className="dashboard-input dashboard-input--date goal-edit-input" type="date" value={form.date} onChange={e => setForm(f => ({ ...f, date: e.target.value }))} />
+        <input className="dashboard-input goal-edit-input" type="text" placeholder="Notes (optional)" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} />
+        <div className="goal-edit-actions">
+          <button className="dashboard-add-btn" type="submit">Save</button>
+          <button className="dashboard-back" type="button" onClick={() => setEditing(false)}>Cancel</button>
+        </div>
+      </form>
+    );
+  }
+
+  const itemDiffColor = DIFFICULTY_COLORS[item.difficulty] ?? DIFFICULTY_COLORS.Minion;
+  return (
+    <div className="dashboard-item battle-enemy-item" style={{ '--diff-color': itemDiffColor }}>
+      <div className="dashboard-item-body">
+        <span className="dashboard-item-title">{item.title}</span>
+        <span className="battle-difficulty-badge">{item.difficulty ?? 'Minion'}</span>
+        <span className="dashboard-item-date">{formatDate(item.date)}</span>
+        {item.description && <span className="dashboard-item-desc">{item.description}</span>}
+      </div>
+      <div className="goal-item-actions">
+        <button className="goal-edit-btn" onClick={() => setEditing(true)} title="Edit">✎</button>
+        <button className="dashboard-item-delete" onClick={() => onDelete(item.id)} title="Remove">✕</button>
+      </div>
+    </div>
+  );
+}
+
 function BattleDashboard() {
   const navigate = useNavigate();
-  const { calendarEvents, addCalendarEvent, deleteCalendarEvent } = useAppContext();
+  const { calendarEvents, addCalendarEvent, editCalendarEvent, deleteCalendarEvent } = useAppContext();
   const [form, setForm]   = useState(EMPTY_FORM);
   const [error, setError] = useState('');
 
@@ -94,25 +151,12 @@ function BattleDashboard() {
               <p className="dashboard-panel-placeholder">No enemies logged yet.</p>
             ) : (
               enemies.map(item => (
-                <div
+                <BattleEnemyItem
                   key={item.id}
-                  className="dashboard-item battle-enemy-item"
-                  style={{ '--diff-color': DIFFICULTY_COLORS[item.difficulty] ?? DIFFICULTY_COLORS.Minion }}
-                >
-                  <div className="dashboard-item-body">
-                    <span className="dashboard-item-title">{item.title}</span>
-                    <span className="battle-difficulty-badge">{item.difficulty ?? 'Minion'}</span>
-                    <span className="dashboard-item-date">{formatDate(item.date)}</span>
-                    {item.description && (
-                      <span className="dashboard-item-desc">{item.description}</span>
-                    )}
-                  </div>
-                  <button
-                    className="dashboard-item-delete"
-                    onClick={() => deleteCalendarEvent(item.id)}
-                    title="Remove"
-                  >✕</button>
-                </div>
+                  item={item}
+                  onEdit={editCalendarEvent}
+                  onDelete={deleteCalendarEvent}
+                />
               ))
             )}
           </div>

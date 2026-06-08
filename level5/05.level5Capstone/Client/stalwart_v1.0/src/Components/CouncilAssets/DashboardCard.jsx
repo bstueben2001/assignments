@@ -11,9 +11,53 @@ function formatDate(dateKey) {
   });
 }
 
+function DashboardItem({ item, advisorColor, onEdit, onDelete }) {
+  const [editing, setEditing] = useState(false);
+  const [form, setForm] = useState({
+    title:       item.title,
+    date:        item.date,
+    description: item.description || '',
+  });
+
+  function handleSave(e) {
+    e.preventDefault();
+    if (!form.title.trim()) return;
+    onEdit(item.id, { title: form.title.trim(), date: form.date, description: form.description });
+    setEditing(false);
+  }
+
+  if (editing) {
+    return (
+      <form className="dashboard-item goal-edit-form" style={{ '--advisor-color': advisorColor }} onSubmit={handleSave}>
+        <input className="dashboard-input goal-edit-input" type="text" value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} autoFocus />
+        <input className="dashboard-input dashboard-input--date goal-edit-input" type="date" value={form.date} onChange={e => setForm(f => ({ ...f, date: e.target.value }))} />
+        <input className="dashboard-input goal-edit-input" type="text" placeholder="Description (optional)" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} />
+        <div className="goal-edit-actions">
+          <button className="dashboard-add-btn" type="submit">Save</button>
+          <button className="dashboard-back" type="button" onClick={() => setEditing(false)}>Cancel</button>
+        </div>
+      </form>
+    );
+  }
+
+  return (
+    <div className="dashboard-item" style={{ '--advisor-color': advisorColor }}>
+      <div className="dashboard-item-body">
+        <span className="dashboard-item-title">{item.title}</span>
+        <span className="dashboard-item-date">{formatDate(item.date)}</span>
+        {item.description && <span className="dashboard-item-desc">{item.description}</span>}
+      </div>
+      <div className="goal-item-actions">
+        <button className="goal-edit-btn" onClick={() => setEditing(true)} title="Edit">✎</button>
+        <button className="dashboard-item-delete" onClick={() => onDelete(item.id)} title="Remove">✕</button>
+      </div>
+    </div>
+  );
+}
+
 function DashboardCard({ category }) {
   const navigate = useNavigate();
-  const { calendarEvents, addCalendarEvent, deleteCalendarEvent } = useAppContext();
+  const { calendarEvents, addCalendarEvent, editCalendarEvent, deleteCalendarEvent } = useAppContext();
   const [form, setForm] = useState(EMPTY_FORM);
   const [error, setError] = useState('');
 
@@ -42,26 +86,9 @@ function DashboardCard({ category }) {
       <form className="dashboard-form" onSubmit={handleAdd}>
         <h2 className="dashboard-form-heading">Add Event</h2>
         <div className="dashboard-form-row">
-          <input
-            className="dashboard-input"
-            type="text"
-            placeholder="Title"
-            value={form.title}
-            onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
-          />
-          <input
-            className="dashboard-input dashboard-input--date"
-            type="date"
-            value={form.date}
-            onChange={e => setForm(f => ({ ...f, date: e.target.value }))}
-          />
-          <input
-            className="dashboard-input"
-            type="text"
-            placeholder="Description (optional)"
-            value={form.description}
-            onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
-          />
+          <input className="dashboard-input" type="text" placeholder="Title" value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} />
+          <input className="dashboard-input dashboard-input--date" type="date" value={form.date} onChange={e => setForm(f => ({ ...f, date: e.target.value }))} />
+          <input className="dashboard-input" type="text" placeholder="Description (optional)" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} />
           <button className="dashboard-add-btn" type="submit">Add</button>
         </div>
         {error && <p className="dashboard-error">{error}</p>}
@@ -76,20 +103,13 @@ function DashboardCard({ category }) {
               <p className="dashboard-panel-placeholder">No events yet. Add one above.</p>
             ) : (
               items.map(item => (
-                <div key={item.id} className="dashboard-item">
-                  <div className="dashboard-item-body">
-                    <span className="dashboard-item-title">{item.title}</span>
-                    <span className="dashboard-item-date">{formatDate(item.date)}</span>
-                    {item.description && (
-                      <span className="dashboard-item-desc">{item.description}</span>
-                    )}
-                  </div>
-                  <button
-                    className="dashboard-item-delete"
-                    onClick={() => deleteCalendarEvent(item.id)}
-                    title="Remove"
-                  >✕</button>
-                </div>
+                <DashboardItem
+                  key={item.id}
+                  item={item}
+                  advisorColor={config?.color}
+                  onEdit={editCalendarEvent}
+                  onDelete={deleteCalendarEvent}
+                />
               ))
             )}
           </div>
