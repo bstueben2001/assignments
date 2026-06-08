@@ -1,3 +1,167 @@
+/* ── Settings ── */
+.settings-page {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 600px;
+}
+
+.settings-title {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.settings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid #2a2a3a;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #2a2a3a;
+}
+.settings-row:last-child { border-bottom: none; }
+
+.settings-row-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.settings-row-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.settings-row-desc {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.settings-btn {
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.45rem 1.1rem;
+  white-space: nowrap;
+}
+.settings-btn--primary { background: #5b8de8; color: #fff; }
+.settings-btn--primary:hover { background: #4a7ad5; }
+
+.settings-select {
+  background: #1a1a2e;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: inherit;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.7rem;
+}
+.settings-select:focus { outline: none; border-color: #5b8de8; }
+
+/* Toggle switch */
+.settings-toggle {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  background: #333;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.2s;
+  padding: 0;
+}
+.settings-toggle--on { background: #5b8de8; }
+
+.settings-toggle-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+  display: block;
+}
+.settings-toggle--on .settings-toggle-knob { transform: translateX(20px); }
+
+/* ── Council ── */
+.council-page {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.council-title {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.council-subtitle {
+  margin: 0;
+  color: #888;
+  font-size: 0.95rem;
+}
+
+.council-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+/* ── Advisor Card ── */
+.advisor-card {
+  border: 1px solid var(--advisor-color);
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.5rem 1.25rem;
+  transition: background 0.15s, transform 0.15s;
+}
+.advisor-card:hover {
+  background: color-mix(in srgb, var(--advisor-color) 10%, transparent);
+  transform: translateY(-2px);
+}
+
+.advisor-card-icon { font-size: 2rem; }
+
+.advisor-card-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--advisor-color);
+}
+
+.advisor-card-tagline {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #aaa;
+  flex: 1;
+}
+
+.advisor-card-cta {
+  font-size: 0.78rem;
+  color: var(--advisor-color);
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
 /* ── Calendar ── */
 .calendar-page {
   display: flex;
