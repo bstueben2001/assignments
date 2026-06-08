@@ -9,8 +9,9 @@ const EMPTY_FORM = { name: '', birthday: '', favorites: '', relationshipStatus: 
 function DiplomacyDashboard() {
   const navigate = useNavigate();
   const { relations, addRelation, deleteRelation } = useAppContext();
-  const [form, setForm]   = useState(EMPTY_FORM);
-  const [error, setError] = useState('');
+  const [modalOpen, setModalOpen] = useState(false);
+  const [form, setForm]           = useState(EMPTY_FORM);
+  const [error, setError]         = useState('');
 
   function handleAdd(e) {
     e.preventDefault();
@@ -23,6 +24,13 @@ function DiplomacyDashboard() {
     });
     setForm(EMPTY_FORM);
     setError('');
+    setModalOpen(false);
+  }
+
+  function handleClose() {
+    setModalOpen(false);
+    setForm(EMPTY_FORM);
+    setError('');
   }
 
   return (
@@ -31,45 +39,8 @@ function DiplomacyDashboard() {
       <div className="dashboard-header">
         <button className="dashboard-back" onClick={() => navigate('/council')}>← Council</button>
         <h1 className="dashboard-title">Diplomacy Advisor</h1>
+        <button className="diplo-add-btn" onClick={() => setModalOpen(true)}>+ Add Friend</button>
       </div>
-
-      <form className="dashboard-form" onSubmit={handleAdd}>
-        <h2 className="dashboard-form-heading">Add Friend</h2>
-        <div className="dashboard-form-row">
-          <input
-            className="dashboard-input"
-            type="text"
-            placeholder="Name"
-            value={form.name}
-            onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-          />
-          <input
-            className="dashboard-input dashboard-input--date"
-            type="date"
-            title="Birthday"
-            value={form.birthday}
-            onChange={e => setForm(f => ({ ...f, birthday: e.target.value }))}
-          />
-          <input
-            className="dashboard-input"
-            type="text"
-            placeholder="Favorites (comma-separated)"
-            value={form.favorites}
-            onChange={e => setForm(f => ({ ...f, favorites: e.target.value }))}
-          />
-          <select
-            className="dashboard-input"
-            value={form.relationshipStatus}
-            onChange={e => setForm(f => ({ ...f, relationshipStatus: e.target.value }))}
-          >
-            {STATUSES.map(s => (
-              <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>
-            ))}
-          </select>
-          <button className="dashboard-add-btn" type="submit">Add</button>
-        </div>
-        {error && <p className="dashboard-error">{error}</p>}
-      </form>
 
       <div className="dashboard-box dashboard-box--diplomacy">
 
@@ -77,7 +48,7 @@ function DiplomacyDashboard() {
           <div className="dashboard-panel-heading">Friends</div>
           <div className="dashboard-panel-content dashboard-panel-content--flush">
             {relations.length === 0 ? (
-              <p className="dashboard-panel-placeholder">No friends added yet. Add one above.</p>
+              <p className="dashboard-panel-placeholder">No friends added yet.</p>
             ) : (
               relations.map(r => (
                 <RelationCard
@@ -98,6 +69,73 @@ function DiplomacyDashboard() {
         </div>
 
       </div>
+
+      {modalOpen && (
+        <div className="diplo-modal-overlay" onClick={handleClose}>
+          <div className="diplo-modal" onClick={e => e.stopPropagation()}>
+            <div className="diplo-modal-header">
+              <h2 className="diplo-modal-title">Add Friend</h2>
+              <button className="diplo-modal-close" onClick={handleClose}>✕</button>
+            </div>
+
+            <form className="diplo-modal-form" onSubmit={handleAdd}>
+              <label className="diplo-modal-label">
+                Name
+                <input
+                  className="dashboard-input"
+                  type="text"
+                  placeholder="Full name"
+                  value={form.name}
+                  onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                  autoFocus
+                />
+              </label>
+
+              <label className="diplo-modal-label">
+                Birthday
+                <input
+                  className="dashboard-input"
+                  type="date"
+                  value={form.birthday}
+                  onChange={e => setForm(f => ({ ...f, birthday: e.target.value }))}
+                />
+              </label>
+
+              <label className="diplo-modal-label">
+                Favorites
+                <input
+                  className="dashboard-input"
+                  type="text"
+                  placeholder="e.g. hiking, coffee, cats"
+                  value={form.favorites}
+                  onChange={e => setForm(f => ({ ...f, favorites: e.target.value }))}
+                />
+                <span className="diplo-modal-hint">Separate with commas</span>
+              </label>
+
+              <label className="diplo-modal-label">
+                Relationship Status
+                <select
+                  className="dashboard-input"
+                  value={form.relationshipStatus}
+                  onChange={e => setForm(f => ({ ...f, relationshipStatus: e.target.value }))}
+                >
+                  {STATUSES.map(s => (
+                    <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>
+                  ))}
+                </select>
+              </label>
+
+              {error && <p className="dashboard-error">{error}</p>}
+
+              <div className="diplo-modal-actions">
+                <button className="cal-btn cal-btn--ghost" type="button" onClick={handleClose}>Cancel</button>
+                <button className="cal-btn cal-btn--primary" type="submit">Add Friend</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
     </div>
   );
