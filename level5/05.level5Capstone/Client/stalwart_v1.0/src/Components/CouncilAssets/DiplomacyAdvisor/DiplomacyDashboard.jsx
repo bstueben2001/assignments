@@ -4,6 +4,7 @@ import RelationCard from './RelationCard';
 import {
   fetchRelations,
   createRelation,
+  updateRelation,
   deleteRelation,
 } from '../../../api/diplomacy';
 
@@ -46,6 +47,15 @@ function DiplomacyDashboard() {
     }
   }
 
+  async function handleEdit(id, updates) {
+    try {
+      const updated = await updateRelation(id, updates);
+      setRelations(prev => prev.map(r => r.id === id ? updated : r));
+    } catch {
+      setApiError('Failed to update. Please try again.');
+    }
+  }
+
   async function handleDelete(id) {
     try {
       await deleteRelation(id);
@@ -84,6 +94,7 @@ function DiplomacyDashboard() {
               <RelationCard
                 key={r.id}
                 relation={r}
+                onEdit={handleEdit}
                 onDelete={() => handleDelete(r.id)}
               />
             ))}
