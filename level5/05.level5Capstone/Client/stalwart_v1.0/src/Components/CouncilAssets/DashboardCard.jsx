@@ -67,27 +67,41 @@ function DashboardCard({ category }) {
         {error && <p className="dashboard-error">{error}</p>}
       </form>
 
-      <div className="dashboard-list">
-        {items.length === 0 ? (
-          <p className="dashboard-empty">No events yet. Add one above to begin.</p>
-        ) : (
-          items.map(item => (
-            <div key={item.id} className="dashboard-item">
-              <div className="dashboard-item-body">
-                <span className="dashboard-item-title">{item.title}</span>
-                <span className="dashboard-item-date">{formatDate(item.date)}</span>
-                {item.description && (
-                  <span className="dashboard-item-desc">{item.description}</span>
-                )}
-              </div>
-              <button
-                className="dashboard-item-delete"
-                onClick={() => deleteCalendarEvent(item.id)}
-                title="Remove"
-              >✕</button>
-            </div>
-          ))
-        )}
+      <div className="dashboard-box dashboard-box--standard">
+
+        <div className="dashboard-panel">
+          <div className="dashboard-panel-heading">Events</div>
+          <div className="dashboard-panel-content">
+            {items.length === 0 ? (
+              <p className="dashboard-panel-placeholder">No events yet. Add one above.</p>
+            ) : (
+              items.map(item => (
+                <div key={item.id} className="dashboard-item">
+                  <div className="dashboard-item-body">
+                    <span className="dashboard-item-title">{item.title}</span>
+                    <span className="dashboard-item-date">{formatDate(item.date)}</span>
+                    {item.description && (
+                      <span className="dashboard-item-desc">{item.description}</span>
+                    )}
+                  </div>
+                  <button
+                    className="dashboard-item-delete"
+                    onClick={() => deleteCalendarEvent(item.id)}
+                    title="Remove"
+                  >✕</button>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        <div className="dashboard-panel">
+          <div className="dashboard-panel-heading">Analytics & Suggestions</div>
+          <div className="dashboard-panel-content">
+            <p className="dashboard-panel-placeholder">Graphs and suggestions coming soon.</p>
+          </div>
+        </div>
+
       </div>
 
     </div>

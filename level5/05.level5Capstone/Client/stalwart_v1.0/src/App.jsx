@@ -17,6 +17,7 @@ function App() {
     <AppProvider>
       <BrowserRouter>
         <Navbar />
+        <main className="content-area">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/council" element={<Council />} />
@@ -29,6 +30,7 @@ function App() {
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/settings" element={<Settings />} />
         </Routes>
+        </main>
       </BrowserRouter>
     </AppProvider>
   );

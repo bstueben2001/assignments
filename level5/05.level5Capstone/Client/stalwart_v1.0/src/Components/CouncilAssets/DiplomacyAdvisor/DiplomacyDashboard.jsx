@@ -71,19 +71,33 @@ function DiplomacyDashboard() {
         {error && <p className="dashboard-error">{error}</p>}
       </form>
 
-      {relations.length === 0 ? (
-        <p className="dashboard-empty">No friends added yet. Add one above to begin.</p>
-      ) : (
-        <div className="relation-grid">
-          {relations.map(r => (
-            <RelationCard
-              key={r.id}
-              relation={r}
-              onDelete={() => deleteRelation(r.id)}
-            />
-          ))}
+      <div className="dashboard-box dashboard-box--diplomacy">
+
+        <div className="dashboard-panel">
+          <div className="dashboard-panel-heading">Friends</div>
+          <div className="dashboard-panel-content dashboard-panel-content--flush">
+            {relations.length === 0 ? (
+              <p className="dashboard-panel-placeholder">No friends added yet. Add one above.</p>
+            ) : (
+              relations.map(r => (
+                <RelationCard
+                  key={r.id}
+                  relation={r}
+                  onDelete={() => deleteRelation(r.id)}
+                />
+              ))
+            )}
+          </div>
         </div>
-      )}
+
+        <div className="dashboard-panel">
+          <div className="dashboard-panel-heading">Suggestions</div>
+          <div className="dashboard-panel-content">
+            <p className="dashboard-panel-placeholder">Suggestions coming soon.</p>
+          </div>
+        </div>
+
+      </div>
 
     </div>
   );

@@ -59,6 +59,20 @@ a:hover { color: var(--gold-bright); }
   flex-direction: column;
 }
 
+.content-area {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.content-area > * {
+  width: 100%;
+  max-width: 1100px;
+}
+
 /* ── Navbar ── */
 nav {
   display: flex;
@@ -128,7 +142,67 @@ nav a.active {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  max-width: 740px;
+  flex: 1;
+  min-height: 0;
+}
+
+.dashboard-box {
+  display: grid;
+  border: 1px solid var(--border-bright);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--bg-surface);
+  flex: 1;
+  min-height: 400px;
+}
+
+.dashboard-box--standard   { grid-template-columns: 1fr 2fr; }
+.dashboard-box--diplomacy  { grid-template-columns: 2fr 1fr; }
+
+.dashboard-panel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.dashboard-panel + .dashboard-panel {
+  border-left: 1px solid var(--border-bright);
+}
+
+.dashboard-panel-heading {
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-raised);
+  flex-shrink: 0;
+}
+
+.dashboard-panel-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dashboard-panel-content--flush {
+  padding: 0;
+  gap: 0;
+}
+
+.dashboard-panel-placeholder {
+  color: var(--text-dim);
+  font-style: italic;
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 2.5rem 1rem;
 }
 
 .dashboard-header {
@@ -279,15 +353,534 @@ nav a.active {
 }
 .dashboard-item-delete:hover { color: var(--crimson); background: var(--bg-hover); }
 
+/* ── Health: 2x2 Grid & Graph ── */
+.dashboard-box--health {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  min-height: 560px;
+}
+
+.health-panel-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.health-panel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--panel-color);
+  flex-shrink: 0;
+}
+
+.health-graph-panel { background: var(--bg-raised); }
+
+.health-graph-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  height: 100%;
+}
+
+.health-graph-controls {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.health-graph-select {
+  background: var(--bg-deep);
+  border: 1px solid var(--border-bright);
+  border-radius: 4px;
+  color: var(--text-primary);
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  padding: 0.3rem 0.5rem;
+  flex: 1;
+}
+.health-graph-select:focus { outline: none; border-color: var(--gold-dim); }
+
+.health-graph-chart {
+  flex: 1;
+  min-height: 0;
+}
+
+/* ── Health Dashboard ── */
+.health-layout {
+  display: flex;
+  gap: 1rem;
+  flex: 1;
+  min-height: 0;
+}
+
+.dashboard-box--health {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  flex: 2;
+  min-height: 500px;
+}
+
+.health-panel-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.health-panel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--panel-color);
+  flex-shrink: 0;
+}
+
+/* Health shared date bar */
+.health-date-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0;
+}
+
+.health-date-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+/* Goal item edit */
+.goal-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  flex-shrink: 0;
+}
+
+.goal-edit-btn {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  transition: color 0.15s, background 0.15s;
+}
+.goal-edit-btn:hover { color: var(--gold); background: var(--bg-hover); }
+
+.goal-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.5rem 0.6rem 0.5rem 0.9rem;
+  border-left: 3px solid var(--advisor-color);
+  background: var(--bg-hover);
+}
+
+.goal-edit-input {
+  font-size: 0.82rem;
+  padding: 0.3rem 0.5rem;
+}
+
+.goal-edit-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+/* Fitness Panel */
+.fitness-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.fitness-add-btn {
+  background: var(--bg-raised);
+  border: 1px solid #4caf82;
+  border-radius: 4px;
+  color: #4caf82;
+  cursor: pointer;
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: 0.38rem 0.8rem;
+  align-self: flex-start;
+  transition: background 0.15s;
+}
+.fitness-add-btn:hover { background: var(--bg-hover); }
+
+.fitness-inline-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.6rem;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-bright);
+  border-left: 3px solid #4caf82;
+  border-radius: 4px;
+}
+
+/* Mood Tracker */
+.mood-tracker {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.mood-question {
+  font-family: 'Cinzel', serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.04em;
+  margin: 0;
+  text-align: center;
+}
+
+.mood-scale {
+  display: flex;
+  gap: 0.35rem;
+  justify-content: center;
+}
+
+.mood-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  background: var(--bg-raised);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.5rem 0.6rem;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  flex: 1;
+}
+.mood-btn:hover { border-color: var(--mood-color); color: var(--mood-color); background: var(--bg-hover); }
+.mood-btn--selected { border-color: var(--mood-color); background: var(--bg-hover); color: var(--mood-color); }
+
+.mood-btn-number {
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.mood-btn-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.mood-scale-legend {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  font-style: italic;
+  padding: 0 0.2rem;
+}
+
+.mood-history {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  border-top: 1px solid var(--border);
+  padding-top: 0.6rem;
+  margin-top: 0.25rem;
+}
+
+.mood-history-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mood-history-date {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  min-width: 40px;
+  flex-shrink: 0;
+}
+
+.mood-history-bar-wrap {
+  flex: 1;
+  height: 5px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.mood-history-bar {
+  display: block;
+  height: 100%;
+  background: var(--mood-color);
+  border-radius: 3px;
+}
+
+.mood-history-value {
+  font-size: 0.65rem;
+  color: var(--mood-color);
+  min-width: 56px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* Nutrition Tracker */
+.nutrition-tracker {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.nutrition-tracker-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.nutrition-tracker-icon { font-size: 1rem; flex-shrink: 0; }
+
+.nutrition-tracker-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.04em;
+}
+
+.nutrition-tracker-goal {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-left: auto;
+}
+
+.nutrition-target-value {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.nutrition-target-input {
+  background: var(--bg-deep);
+  border: 1px solid var(--border-bright);
+  border-radius: 4px;
+  color: var(--text-primary);
+  font-size: 0.82rem;
+  padding: 0.2rem 0.4rem;
+  width: 60px;
+}
+.nutrition-target-input:focus { outline: none; border-color: #d4a017; }
+
+.nutrition-unit { font-size: 0.75rem; color: var(--text-muted); }
+
+.nutrition-target-save {
+  background: none;
+  border: none;
+  color: #4caf82;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0 0.2rem;
+}
+
+.nutrition-progress-bar {
+  height: 5px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.nutrition-progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.nutrition-progress-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.nutrition-log-form {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.nutrition-amount-input {
+  width: 80px !important;
+  flex: 0 0 auto !important;
+  font-size: 0.82rem;
+}
+
+.nutrition-entries {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.nutrition-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-raised);
+  border-radius: 3px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  padding: 0.2rem 0.5rem;
+}
+
+.nutrition-entry-amount { font-weight: 600; color: var(--text-primary); }
+
+.nutrition-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0.5rem 0;
+}
+
+/* Daily Log quadrant */
+.health-log-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.health-log-textarea {
+  background: var(--bg-deep);
+  border: 1px solid var(--border-bright);
+  border-radius: 4px;
+  color: var(--text-primary);
+  font-family: 'Lora', serif;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.6rem;
+  resize: vertical;
+  width: 100%;
+}
+.health-log-textarea:focus { outline: none; border-color: #4caf82; }
+
+.health-log-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.health-log-entries {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+  overflow-y: auto;
+}
+
+.health-log-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  background: var(--bg-raised);
+  border-left: 3px solid #4caf82;
+  border-radius: 3px;
+  padding: 0.4rem 0.6rem;
+}
+
+.health-log-entry-date {
+  font-family: 'Cinzel', serif;
+  font-size: 0.68rem;
+  color: #4caf82;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.health-log-entry-text {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  flex: 1;
+  font-style: italic;
+}
+
+/* Graph sidebar */
+.health-graph-sidebar {
+  flex: 1;
+  border: 1px solid var(--border-bright);
+  border-radius: 6px;
+  background: var(--bg-surface);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.health-graph-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-height: 0;
+}
+
+.health-graph-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.health-graph-select {
+  background: var(--bg-deep);
+  border: 1px solid var(--border-bright);
+  border-radius: 4px;
+  color: var(--text-primary);
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  padding: 0.3rem 0.5rem;
+  width: 100%;
+}
+.health-graph-select:focus { outline: none; border-color: var(--gold-dim); }
+
+.health-graph-chart {
+  flex: 1;
+  min-height: 0;
+}
+
+/* ── Battle: Enemy Items ── */
+.battle-enemy-item {
+  border-left-color: var(--diff-color) !important;
+}
+
+.battle-difficulty-badge {
+  font-family: 'Cinzel', serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  color: var(--diff-color);
+  text-transform: uppercase;
+}
+
+.dashboard-input--difficulty {
+  color: var(--diff-color);
+  font-family: 'Cinzel', serif;
+  font-size: 0.8rem;
+  flex: 0 0 auto;
+  min-width: 120px;
+}
+
 /* ── Diplomacy: Relation List & Items ── */
 .relation-grid {
   display: flex;
   flex-direction: column;
   gap: 0;
-  border: 1px solid var(--border-bright);
-  border-radius: 6px;
-  overflow: hidden;
-  background: var(--bg-surface);
 }
 
 .relation-card {
@@ -615,7 +1208,8 @@ nav a.active {
   flex-direction: column;
   gap: 1rem;
   padding: 1.5rem;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   box-sizing: border-box;
 }
 
