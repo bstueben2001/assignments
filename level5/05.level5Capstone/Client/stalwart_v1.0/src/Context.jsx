@@ -14,7 +14,6 @@ const AppContext = createContext(null);
 
 export function AppProvider({ children }) {
   const [calendarEvents, setCalendarEvents] = useState([]);
-  const [relations, setRelations]           = useState([]);
 
   function addCalendarEvent(event) {
     setCalendarEvents(prev => [...prev, { ...event, id: crypto.randomUUID() }]);
@@ -26,20 +25,9 @@ export function AppProvider({ children }) {
     setCalendarEvents(prev => prev.filter(e => e.id !== id));
   }
 
-  function addRelation(relation) {
-    setRelations(prev => [...prev, { ...relation, id: crypto.randomUUID() }]);
-  }
-  function editRelation(id, updates) {
-    setRelations(prev => prev.map(r => r.id === id ? { ...r, ...updates } : r));
-  }
-  function deleteRelation(id) {
-    setRelations(prev => prev.filter(r => r.id !== id));
-  }
-
   return (
     <AppContext.Provider value={{
       calendarEvents, addCalendarEvent, editCalendarEvent, deleteCalendarEvent,
-      relations, addRelation, editRelation, deleteRelation,
     }}>
       {children}
     </AppContext.Provider>

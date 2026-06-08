@@ -1,36 +1,64 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppContext } from '../../../Context';
 import RelationCard from './RelationCard';
+import {
+  fetchRelations,
+  createRelation,
+  deleteRelation,
+} from '../../../api/diplomacy';
 
-const STATUSES = ['good', 'great', 'distant', 'strained', 'complicated'];
+const STATUSES  = ['good', 'great', 'distant', 'strained', 'complicated'];
 const EMPTY_FORM = { name: '', birthday: '', favorites: '', relationshipStatus: 'good' };
 
 function DiplomacyDashboard() {
   const navigate = useNavigate();
-  const { relations, addRelation, deleteRelation } = useAppContext();
+
+  const [relations, setRelations] = useState([]);
+  const [loading, setLoading]     = useState(true);
+  const [apiError, setApiError]   = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [form, setForm]           = useState(EMPTY_FORM);
-  const [error, setError]         = useState('');
+  const [formError, setFormError] = useState('');
 
-  function handleAdd(e) {
+  useEffect(() => {
+    fetchRelations()
+      .then(setRelations)
+      .catch(() => setApiError('Could not load friends. Is the server running?'))
+      .finally(() => setLoading(false));
+  }, []);
+
+  async function handleAdd(e) {
     e.preventDefault();
-    if (!form.name.trim()) { setError('A name is required.'); return; }
-    addRelation({
-      name:               form.name.trim(),
-      birthday:           form.birthday,
-      favorites:          form.favorites.split(',').map(f => f.trim()).filter(Boolean),
-      relationshipStatus: form.relationshipStatus,
-    });
-    setForm(EMPTY_FORM);
-    setError('');
-    setModalOpen(false);
+    if (!form.name.trim()) { setFormError('A name is required.'); return; }
+    try {
+      const newRelation = await createRelation({
+        name:               form.name.trim(),
+        birthday:           form.birthday,
+        favorites:          form.favorites.split(',').map(f => f.trim()).filter(Boolean),
+        relationshipStatus: form.relationshipStatus,
+      });
+      setRelations(prev => [...prev, newRelation]);
+      setForm(EMPTY_FORM);
+      setFormError('');
+      setModalOpen(false);
+    } catch {
+      setFormError('Failed to save. Please try again.');
+    }
+  }
+
+  async function handleDelete(id) {
+    try {
+      await deleteRelation(id);
+      setRelations(prev => prev.filter(r => r.id !== id));
+    } catch {
+      setApiError('Failed to delete. Please try again.');
+    }
   }
 
   function handleClose() {
     setModalOpen(false);
     setForm(EMPTY_FORM);
-    setError('');
+    setFormError('');
   }
 
   return (
@@ -47,17 +75,18 @@ function DiplomacyDashboard() {
         <div className="dashboard-panel">
           <div className="dashboard-panel-heading">Friends</div>
           <div className="dashboard-panel-content dashboard-panel-content--flush">
-            {relations.length === 0 ? (
+            {loading && <p className="dashboard-panel-placeholder">Loading...</p>}
+            {apiError && <p className="dashboard-error" style={{ padding: '1rem' }}>{apiError}</p>}
+            {!loading && !apiError && relations.length === 0 && (
               <p className="dashboard-panel-placeholder">No friends added yet.</p>
-            ) : (
-              relations.map(r => (
-                <RelationCard
-                  key={r.id}
-                  relation={r}
-                  onDelete={() => deleteRelation(r.id)}
-                />
-              ))
             )}
+            {relations.map(r => (
+              <RelationCard
+                key={r.id}
+                relation={r}
+                onDelete={() => handleDelete(r.id)}
+              />
+            ))}
           </div>
         </div>
 
@@ -126,7 +155,7 @@ function DiplomacyDashboard() {
                 </select>
               </label>
 
-              {error && <p className="dashboard-error">{error}</p>}
+              {formError && <p className="dashboard-error">{formError}</p>}
 
               <div className="diplo-modal-actions">
                 <button className="cal-btn cal-btn--ghost" type="button" onClick={handleClose}>Cancel</button>
