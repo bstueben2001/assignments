@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { fetchHealthGoals, createHealthGoal, updateHealthGoal, deleteHealthGoal } from './api/health';
 import { fetchBattleItems, createBattleItem, updateBattleItem, deleteBattleItem } from './api/battle';
+import { signup as apiSignup, login as apiLogin } from './api/auth';
 
 export const CATEGORIES = [
   { id: 'health',        label: 'Health',        color: '#4caf82' },
@@ -16,6 +17,30 @@ const AppContext = createContext(null);
 
 export function AppProvider({ children }) {
   const [calendarEvents, setCalendarEvents] = useState([]);
+  const [user, setUser] = useState(() => {
+    const stored = localStorage.getItem('stalwart_user');
+    return stored ? JSON.parse(stored) : null;
+  });
+
+  async function signup(username, email, password) {
+    const data = await apiSignup(username, email, password);
+    localStorage.setItem('stalwart_token', data.token);
+    localStorage.setItem('stalwart_user', JSON.stringify(data.user));
+    setUser(data.user);
+  }
+
+  async function login(email, password) {
+    const data = await apiLogin(email, password);
+    localStorage.setItem('stalwart_token', data.token);
+    localStorage.setItem('stalwart_user', JSON.stringify(data.user));
+    setUser(data.user);
+  }
+
+  function logout() {
+    localStorage.removeItem('stalwart_token');
+    localStorage.removeItem('stalwart_user');
+    setUser(null);
+  }
 
   useEffect(() => {
     Promise.all([fetchHealthGoals(), fetchBattleItems()])
@@ -68,6 +93,7 @@ export function AppProvider({ children }) {
   return (
     <AppContext.Provider value={{
       calendarEvents, addCalendarEvent, editCalendarEvent, deleteCalendarEvent,
+      user, signup, login, logout,
     }}>
       {children}
     </AppContext.Provider>

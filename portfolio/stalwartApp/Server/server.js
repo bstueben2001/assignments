@@ -16,10 +16,12 @@ app.use(express.json());
 const healthRouter = require('./Routes/healthRouter');
 const diplomacyRouter = require('./Routes/diplomacyRouter');
 const battleRouter = require('./Routes/battleRouter');
+const authRouter = require('./Routes/authRouter');
 
 app.use('/api/health', healthRouter);
 app.use('/api/diplomacy', diplomacyRouter);
 app.use('/api/battle', battleRouter);
+app.use('/api/auth', authRouter);
 
 // MongoDB connection
 mongoose

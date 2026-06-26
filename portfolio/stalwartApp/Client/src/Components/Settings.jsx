@@ -1,8 +1,12 @@
 import { useState } from 'react';
+import { useAppContext } from '../Context';
+import AuthModal from './AuthModal';
 
 function Settings() {
+  const { user, logout } = useAppContext();
   const [theme, setTheme] = useState('dark');
   const [notifications, setNotifications] = useState(true);
+  const [showModal, setShowModal] = useState(false);
 
   return (
     <main className="settings-page">
@@ -13,9 +17,15 @@ function Settings() {
         <div className="settings-row">
           <div className="settings-row-info">
             <span className="settings-row-label">Account</span>
-            <span className="settings-row-desc">Sign in to sync your council across devices.</span>
+            <span className="settings-row-desc">
+              {user ? `Signed in as ${user.email}` : 'Sign in to sync your council across devices.'}
+            </span>
           </div>
-          <button className="settings-btn settings-btn--primary">Log In</button>
+          {user ? (
+            <button className="settings-btn settings-btn--primary" onClick={logout}>Log Out</button>
+          ) : (
+            <button className="settings-btn settings-btn--primary" onClick={() => setShowModal(true)}>Log In</button>
+          )}
         </div>
 
         <div className="settings-row">
@@ -50,6 +60,8 @@ function Settings() {
         </div>
 
       </div>
+
+      {showModal && <AuthModal onClose={() => setShowModal(false)} />}
     </main>
   );
 }
