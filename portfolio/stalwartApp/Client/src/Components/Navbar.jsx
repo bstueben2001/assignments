@@ -1,15 +1,9 @@
-import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAppContext } from '../Context';
 import AuthModal from './AuthModal';
 
 function Navbar() {
-  const { user, logout } = useAppContext();
-  const [showModal, setShowModal] = useState(false);
-  const [defaultTab, setDefaultTab] = useState('login');
-
-  function openLogin() { setDefaultTab('login'); setShowModal(true); }
-  function openSignup() { setDefaultTab('signup'); setShowModal(true); }
+  const { user, logout, showAuth, authTab, openAuth, closeAuth } = useAppContext();
 
   return (
     <>
@@ -29,14 +23,14 @@ function Navbar() {
             </>
           ) : (
             <>
-              <button className="nav-auth-btn nav-auth-btn--ghost" onClick={openLogin}>Log In</button>
-              <button className="nav-auth-btn nav-auth-btn--primary" onClick={openSignup}>Sign Up</button>
+              <button className="nav-auth-btn nav-auth-btn--ghost" onClick={() => openAuth('login')}>Log In</button>
+              <button className="nav-auth-btn nav-auth-btn--primary" onClick={() => openAuth('signup')}>Sign Up</button>
             </>
           )}
         </div>
       </nav>
 
-      {showModal && <AuthModal defaultTab={defaultTab} onClose={() => setShowModal(false)} />}
+      {showAuth && <AuthModal defaultTab={authTab} onClose={closeAuth} />}
     </>
   );
 }

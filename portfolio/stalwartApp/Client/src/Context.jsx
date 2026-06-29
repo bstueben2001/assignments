@@ -21,6 +21,11 @@ export function AppProvider({ children }) {
     const stored = localStorage.getItem('stalwart_user');
     return stored ? JSON.parse(stored) : null;
   });
+  const [showAuth, setShowAuth] = useState(false);
+  const [authTab, setAuthTab] = useState('login');
+
+  function openAuth(tab = 'login') { setAuthTab(tab); setShowAuth(true); }
+  function closeAuth() { setShowAuth(false); }
 
   async function signup(username, email, password) {
     const data = await apiSignup(username, email, password);
@@ -29,8 +34,8 @@ export function AppProvider({ children }) {
     setUser(data.user);
   }
 
-  async function login(email, password) {
-    const data = await apiLogin(email, password);
+  async function login(identifier, password) {
+    const data = await apiLogin(identifier, password);
     localStorage.setItem('stalwart_token', data.token);
     localStorage.setItem('stalwart_user', JSON.stringify(data.user));
     setUser(data.user);
@@ -99,6 +104,7 @@ export function AppProvider({ children }) {
     <AppContext.Provider value={{
       calendarEvents, addCalendarEvent, editCalendarEvent, deleteCalendarEvent,
       user, signup, login, logout,
+      showAuth, authTab, openAuth, closeAuth,
     }}>
       {children}
     </AppContext.Provider>

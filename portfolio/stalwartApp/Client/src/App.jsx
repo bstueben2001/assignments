@@ -12,6 +12,7 @@ import EconomicDashboard     from './Components/CouncilAssets/EconomicAdvisor/Ec
 import RomanticDashboard     from './Components/CouncilAssets/RomanticAdvisor/RomanticDashboard';
 import EntertainmentDashboard from './Components/CouncilAssets/EntertainmentAdvisor/EntertainmentDashboard';
 import Embers from './Components/Embers';
+import AuthGate from './Components/AuthGate';
 
 function App() {
   return (
@@ -22,14 +23,14 @@ function App() {
         <main className="content-area">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/council" element={<Council />} />
-          <Route path="/council/health"        element={<HealthDashboard />} />
-          <Route path="/council/battle"        element={<BattleDashboard />} />
-          <Route path="/council/diplomacy"     element={<DiplomacyDashboard />} />
-          <Route path="/council/economic"      element={<EconomicDashboard />} />
-          <Route path="/council/romantic"      element={<RomanticDashboard />} />
-          <Route path="/council/entertainment" element={<EntertainmentDashboard />} />
-          <Route path="/calendar" element={<Calendar />} />
+          <Route path="/council" element={<AuthGate><Council /></AuthGate>} />
+          <Route path="/council/health"        element={<AuthGate><HealthDashboard /></AuthGate>} />
+          <Route path="/council/battle"        element={<AuthGate><BattleDashboard /></AuthGate>} />
+          <Route path="/council/diplomacy"     element={<AuthGate><DiplomacyDashboard /></AuthGate>} />
+          <Route path="/council/economic"      element={<AuthGate><EconomicDashboard /></AuthGate>} />
+          <Route path="/council/romantic"      element={<AuthGate><RomanticDashboard /></AuthGate>} />
+          <Route path="/council/entertainment" element={<AuthGate><EntertainmentDashboard /></AuthGate>} />
+          <Route path="/calendar" element={<AuthGate><Calendar /></AuthGate>} />
           <Route path="/settings" element={<Settings />} />
         </Routes>
         </main>

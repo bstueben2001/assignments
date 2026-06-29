@@ -4,7 +4,7 @@ import { useAppContext } from '../Context';
 function AuthModal({ onClose, defaultTab = 'login' }) {
   const { login, signup } = useAppContext();
   const [tab, setTab] = useState(defaultTab);
-  const [form, setForm] = useState({ username: '', email: '', password: '' });
+  const [form, setForm] = useState({ username: '', identifier: '', email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -18,7 +18,7 @@ function AuthModal({ onClose, defaultTab = 'login' }) {
     setLoading(true);
     try {
       if (tab === 'login') {
-        await login(form.email, form.password);
+        await login(form.identifier, form.password);
       } else {
         await signup(form.username, form.email, form.password);
       }
@@ -62,18 +62,33 @@ function AuthModal({ onClose, defaultTab = 'login' }) {
               />
             </label>
           )}
-          <label className="auth-label">
-            Email
-            <input
-              className="auth-input"
-              type="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              required
-              autoComplete="email"
-            />
-          </label>
+          {tab === 'login' ? (
+            <label className="auth-label">
+              Email or Username
+              <input
+                className="auth-input"
+                type="text"
+                name="identifier"
+                value={form.identifier}
+                onChange={handleChange}
+                required
+                autoComplete="username"
+              />
+            </label>
+          ) : (
+            <label className="auth-label">
+              Email
+              <input
+                className="auth-input"
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                required
+                autoComplete="email"
+              />
+            </label>
+          )}
           <label className="auth-label">
             Password
             <input
