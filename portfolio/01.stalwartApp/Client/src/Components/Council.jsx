@@ -5,6 +5,7 @@ import DiplomacyAdvisorCard from './CouncilAssets/DiplomacyAdvisor/diplomacyAdvi
 import EconomicAdvisorCard from './CouncilAssets/EconomicAdvisor/economicAdvisor';
 import RomanticAdvisorCard from './CouncilAssets/RomanticAdvisor/romanticAdvisor';
 import EntertainmentAdvisorCard from './CouncilAssets/EntertainmentAdvisor/entertainmentAdvisor';
+import MuseumCard from './CouncilAssets/Museum/museum';
 
 function Council() {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ function Council() {
         <EconomicAdvisorCard     onClick={() => navigate('/council/economic')} />
         <RomanticAdvisorCard     onClick={() => navigate('/council/romantic')} />
         <EntertainmentAdvisorCard onClick={() => navigate('/council/entertainment')} />
+        <MuseumCard onClick={() => navigate('/council/museum')} />
       </div>
     </main>
   );

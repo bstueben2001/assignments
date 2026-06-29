@@ -11,6 +11,7 @@ import DiplomacyDashboard    from './Components/CouncilAssets/DiplomacyAdvisor/D
 import EconomicDashboard     from './Components/CouncilAssets/EconomicAdvisor/EconomicDashboard';
 import RomanticDashboard     from './Components/CouncilAssets/RomanticAdvisor/RomanticDashboard';
 import EntertainmentDashboard from './Components/CouncilAssets/EntertainmentAdvisor/EntertainmentDashboard';
+import MuseumDashboard from './Components/CouncilAssets/Museum/MuseumDashboard';
 import Embers from './Components/Embers';
 import AuthGate from './Components/AuthGate';
 
@@ -30,6 +31,7 @@ function App() {
           <Route path="/council/economic"      element={<AuthGate><EconomicDashboard /></AuthGate>} />
           <Route path="/council/romantic"      element={<AuthGate><RomanticDashboard /></AuthGate>} />
           <Route path="/council/entertainment" element={<AuthGate><EntertainmentDashboard /></AuthGate>} />
+          <Route path="/council/museum"        element={<AuthGate><MuseumDashboard /></AuthGate>} />
           <Route path="/calendar" element={<AuthGate><Calendar /></AuthGate>} />
           <Route path="/settings" element={<Settings />} />
         </Routes>

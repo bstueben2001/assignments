@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../../../Context';
+import generalRoman from './generalRoman.png';
 
 const DIFFICULTIES = ['Minion', 'Champion', 'Overlord', 'Emperor'];
 
@@ -98,10 +99,11 @@ function BattleDashboard() {
 
   return (
     <div className="dashboard-page" style={{ '--advisor-color': '#e05c5c' }}>
+      <img src={generalRoman} alt="" className="battle-general-img" />
 
       <div className="dashboard-header">
         <button className="dashboard-back" onClick={() => navigate('/council')}>← Council</button>
-        <h1 className="dashboard-title">Battle Advisor</h1>
+        <h1 className="dashboard-title">General Roman - Battle Advisor</h1>
       </div>
 
       <form className="dashboard-form" onSubmit={handleAdd}>

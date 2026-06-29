@@ -978,6 +978,41 @@ nav a.active {
   min-height: 0;
 }
 
+/* ── Museum card: spark effect ── */
+.museum-spark {
+  position: absolute;
+  font-family: 'Courier New', monospace;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0;
+  animation: none;
+  text-shadow: 0 0 6px currentColor;
+}
+.advisor-fx-wrapper:hover .museum-spark {
+  animation: museum-rise 1.4s ease-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+@keyframes museum-rise {
+  0%   { opacity: 0;                          transform: translateY(0)      scale(0.7); }
+  15%  { opacity: var(--peak-opacity);        transform: translateY(-16px)  scale(1.1); }
+  70%  { opacity: calc(var(--peak-opacity) * 0.7); transform: translateY(-95px)  scale(1);   }
+  100% { opacity: 0;                          transform: translateY(-140px) scale(0.6); }
+}
+
+/* ── Battle: General image ── */
+.battle-general-img {
+  position: fixed;
+  bottom: -8rem;
+  right: -3rem;
+  height: 80vh;
+  width: auto;
+  object-fit: contain;
+  object-position: bottom right;
+  pointer-events: none;
+  z-index: 2;
+  filter: brightness(0.7);
+}
+
 /* ── Battle: Enemy Items ── */
 .battle-enemy-item {
   border-left-color: var(--diff-color) !important;
@@ -1396,6 +1431,8 @@ nav a.active {
   cursor: pointer;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  text-align: center;
   gap: 0.5rem;
   padding: 1.5rem 1.25rem;
   aspect-ratio: 3 / 4;

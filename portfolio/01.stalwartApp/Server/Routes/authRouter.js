@@ -13,8 +13,7 @@ router.post('/signup', async (req, res) => {
       return res.status(409).json({ error: 'Username or email already in use' });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({ username, email, password: hashedPassword });
+    const user = await User.create({ username, email, password });
 
     const token = jwt.sign({ id: user._id, username: user.username }, process.env.SECRET, { expiresIn: '7d' });
 
@@ -30,7 +29,7 @@ router.post('/login', async (req, res) => {
 
     const user = await User.findOne({
       $or: [{ email: identifier }, { username: identifier }],
-    });
+    }).select('+password');
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
