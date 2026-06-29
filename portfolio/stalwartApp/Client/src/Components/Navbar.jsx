@@ -1,9 +1,12 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useAppContext } from '../Context';
 import AuthModal from './AuthModal';
 
 function Navbar() {
   const { user, logout, showAuth, authTab, openAuth, closeAuth } = useAppContext();
+  const navigate = useNavigate();
+
+  function handleLogout() { logout(); navigate('/'); }
 
   return (
     <>
@@ -19,7 +22,7 @@ function Navbar() {
           {user ? (
             <>
               <span className="nav-user">Hail, <span>{user.username}</span></span>
-              <button className="nav-auth-btn nav-auth-btn--ghost" onClick={logout}>Log Out</button>
+              <button className="nav-auth-btn nav-auth-btn--ghost" onClick={handleLogout}>Log Out</button>
             </>
           ) : (
             <>

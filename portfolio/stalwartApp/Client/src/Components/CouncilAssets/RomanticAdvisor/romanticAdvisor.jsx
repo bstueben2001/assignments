@@ -27,7 +27,7 @@ function RomanticAdvisorCard({ onClick }) {
           '--peak-opacity': 0.75,
         }}>♥</span>
       ))}
-      <AdvisorCard title="Romantic Advisor" tagline="Nurture connections, plan dates, and track intentions." color="#d46fa0" icon="💌" onClick={onClick}>
+      <AdvisorCard title="Romantic Advisor" tagline="Coming soon." color="#d46fa0" icon="💌" onClick={onClick}>
         {HEARTS.filter(h => !h.behind).map((h, i) => (
           <span key={i} className="romantic-heart" style={{
             left: h.left, bottom: h.bottom,

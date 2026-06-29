@@ -25,7 +25,7 @@ function EconomicAdvisorCard({ onClick }) {
           '--peak-opacity': 0.75,
         }}>●</span>
       ))}
-      <AdvisorCard title="Economic Advisor" tagline="Oversee budgets, savings, and financial strategy." color="#d4a017" icon="💰" onClick={onClick}>
+      <AdvisorCard title="Economic Advisor" tagline="Coming soon." color="#d4a017" icon="💰" onClick={onClick}>
         {ECON_PARTICLES.filter(p => !p.behind).map((p, i) => (
           <span key={i} className="econ-dollar" style={{
             left: p.left, bottom: p.bottom,

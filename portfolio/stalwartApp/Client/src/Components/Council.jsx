@@ -14,8 +14,8 @@ function Council() {
       <h1 className="council-title">Your Council</h1>
       <p className="council-subtitle">Choose an advisor to open their dashboard.</p>
       <div className="council-grid">
-        <HealthAdvisorCard       onClick={() => navigate('/council/health')} />
         <BattleAdvisorCard       onClick={() => navigate('/council/battle')} />
+        <HealthAdvisorCard       onClick={() => navigate('/council/health')} />
         <DiplomacyAdvisorCard    onClick={() => navigate('/council/diplomacy')} />
         <EconomicAdvisorCard     onClick={() => navigate('/council/economic')} />
         <RomanticAdvisorCard     onClick={() => navigate('/council/romantic')} />

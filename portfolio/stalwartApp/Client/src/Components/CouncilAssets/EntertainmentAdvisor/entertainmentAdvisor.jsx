@@ -42,7 +42,7 @@ function EntertainmentAdvisorCard({ onClick }) {
           }}
         >★</span>
       ))}
-      <AdvisorCard title="Entertainment Advisor" tagline="Curate hobbies, media, and leisure pursuits." color="#9b6bd4" icon="🎭" onClick={onClick}>
+      <AdvisorCard title="Entertainment Advisor" tagline="Coming soon." color="#9b6bd4" icon="🎭" onClick={onClick}>
         {STARS.filter(s => !s.behind).map((s, i) => (
           <span
             key={i}

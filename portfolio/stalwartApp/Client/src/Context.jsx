@@ -45,7 +45,6 @@ export function AppProvider({ children }) {
     localStorage.removeItem('stalwart_token');
     localStorage.removeItem('stalwart_user');
     setUser(null);
-    window.location.reload();
   }
 
   useEffect(() => {
