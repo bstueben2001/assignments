@@ -1,11 +1,13 @@
-//after following "councilRouter.js" and selecting "Battle Advisor", this route will present the Battle Dashboard
 const express = require('express');
 const router = express.Router();
 const BattleItem = require('../Models/battleItemSchema');
+const auth = require('../Middleware/authMiddleware');
+
+router.use(auth);
 
 router.get('/', async (req, res) => {
   try {
-    const items = await BattleItem.find().sort({ date: 1 });
+    const items = await BattleItem.find({ userId: req.user.id }).sort({ date: 1 });
     res.json(items);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -14,7 +16,7 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const item = await BattleItem.create(req.body);
+    const item = await BattleItem.create({ ...req.body, userId: req.user.id });
     res.status(201).json(item);
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -23,8 +25,8 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
   try {
-    const item = await BattleItem.findByIdAndUpdate(
-      req.params.id,
+    const item = await BattleItem.findOneAndUpdate(
+      { _id: req.params.id, userId: req.user.id },
       req.body,
       { new: true, runValidators: true }
     );
@@ -37,7 +39,8 @@ router.put('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
   try {
-    await BattleItem.findByIdAndDelete(req.params.id);
+    const item = await BattleItem.findOneAndDelete({ _id: req.params.id, userId: req.user.id });
+    if (!item) return res.status(404).json({ error: 'Item not found' });
     res.json({ message: 'Deleted' });
   } catch (err) {
     res.status(500).json({ error: err.message });

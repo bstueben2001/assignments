@@ -1,11 +1,13 @@
-//after following "councilRouter.js" and selecting "Health Advisor", this route will present the Health Dashboard
 const express = require('express');
 const router = express.Router();
 const HealthGoal = require('../Models/healthGoalSchema');
+const auth = require('../Middleware/authMiddleware');
+
+router.use(auth);
 
 router.get('/', async (req, res) => {
   try {
-    const goals = await HealthGoal.find().sort({ date: 1 });
+    const goals = await HealthGoal.find({ userId: req.user.id }).sort({ date: 1 });
     res.json(goals);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -14,7 +16,7 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const goal = await HealthGoal.create(req.body);
+    const goal = await HealthGoal.create({ ...req.body, userId: req.user.id });
     res.status(201).json(goal);
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -23,8 +25,8 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
   try {
-    const goal = await HealthGoal.findByIdAndUpdate(
-      req.params.id,
+    const goal = await HealthGoal.findOneAndUpdate(
+      { _id: req.params.id, userId: req.user.id },
       req.body,
       { new: true, runValidators: true }
     );
@@ -37,7 +39,8 @@ router.put('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
   try {
-    await HealthGoal.findByIdAndDelete(req.params.id);
+    const goal = await HealthGoal.findOneAndDelete({ _id: req.params.id, userId: req.user.id });
+    if (!goal) return res.status(404).json({ error: 'Goal not found' });
     res.json({ message: 'Deleted' });
   } catch (err) {
     res.status(500).json({ error: err.message });

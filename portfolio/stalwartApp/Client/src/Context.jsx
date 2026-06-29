@@ -40,15 +40,20 @@ export function AppProvider({ children }) {
     localStorage.removeItem('stalwart_token');
     localStorage.removeItem('stalwart_user');
     setUser(null);
+    window.location.reload();
   }
 
   useEffect(() => {
+    if (!user) {
+      setCalendarEvents([]);
+      return;
+    }
     Promise.all([fetchHealthGoals(), fetchBattleItems()])
       .then(([health, battle]) => {
-        setCalendarEvents(prev => [...prev, ...health, ...battle]);
+        setCalendarEvents([...health, ...battle]);
       })
       .catch(console.error);
-  }, []);
+  }, [user]);
 
   async function addCalendarEvent(event) {
     if (event.category === 'health') {
