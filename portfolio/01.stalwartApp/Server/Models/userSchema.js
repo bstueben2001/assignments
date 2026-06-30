@@ -20,6 +20,11 @@ const userSchema = new mongoose.Schema({
     required: true,
     select: false,
   },
+  killCounts: {
+    type: Map,
+    of: Number,
+    default: {},
+  },
 }, { timestamps: true });
 
 userSchema.pre('save', async function (next) {

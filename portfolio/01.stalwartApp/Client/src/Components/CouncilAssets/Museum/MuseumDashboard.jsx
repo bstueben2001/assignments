@@ -1,22 +1,24 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAppContext } from '../../../Context';
 import curatorDyllan from './curatorDyllan.png';
 
-const EMPTY_FORM = { title: '', description: '' };
+const ENEMY_RANKS = [
+  { key: 'Minion',    color: '#8888a0' },
+  { key: 'Captain',   color: '#5b9e5b' },
+  { key: 'Champion',  color: '#c9a84c' },
+  { key: 'Commander', color: '#4a8fbc' },
+  { key: 'General',   color: '#c87840' },
+  { key: 'Overlord',  color: '#c44040' },
+  { key: 'Prophet',   color: '#8844cc' },
+  { key: 'Emperor',   color: '#9b6bd4' },
+  { key: 'God',       color: '#ffd700' },
+];
 
 function MuseumDashboard() {
   const navigate = useNavigate();
-  const [exhibits, setExhibits] = useState([]);
-  const [form, setForm]   = useState(EMPTY_FORM);
-  const [error, setError] = useState('');
+  const { killCounts } = useAppContext();
 
-  function handleAdd(e) {
-    e.preventDefault();
-    if (!form.title.trim()) { setError('A title is required.'); return; }
-    setExhibits(prev => [...prev, { id: Date.now(), title: form.title.trim(), description: form.description }]);
-    setForm(EMPTY_FORM);
-    setError('');
-  }
+  const totalKills = ENEMY_RANKS.reduce((sum, { key }) => sum + (killCounts?.[key] || 0), 0);
 
   return (
     <div className="dashboard-page" style={{ '--advisor-color': '#c4714a' }}>
@@ -27,50 +29,39 @@ function MuseumDashboard() {
         <h1 className="dashboard-title">Curator Dyllan - The Museum</h1>
       </div>
 
-      <form className="dashboard-form" onSubmit={handleAdd}>
-        <h2 className="dashboard-form-heading">Add Exhibit</h2>
-        <div className="dashboard-form-row">
-          <input
-            className="dashboard-input"
-            type="text"
-            placeholder="Exhibit title"
-            value={form.title}
-            onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
-          />
-          <input
-            className="dashboard-input"
-            type="text"
-            placeholder="Notes (optional)"
-            value={form.description}
-            onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
-          />
-          <button className="dashboard-add-btn" type="submit">Add</button>
-        </div>
-        {error && <p className="dashboard-error">{error}</p>}
-      </form>
-
       <div className="dashboard-box dashboard-box--standard">
 
         <div className="dashboard-panel">
-          <div className="dashboard-panel-heading">Exhibits</div>
+          <div className="dashboard-panel-heading">Hall of Slain</div>
           <div className="dashboard-panel-content">
-            {exhibits.length === 0 ? (
-              <p className="dashboard-panel-placeholder">No exhibits yet.</p>
-            ) : (
-              exhibits.map(item => (
-                <div key={item.id} className="dashboard-item">
-                  <div className="dashboard-item-body">
-                    <span className="dashboard-item-title">{item.title}</span>
-                    {item.description && <span className="dashboard-item-desc">{item.description}</span>}
-                  </div>
-                  <button
-                    className="dashboard-item-delete"
-                    onClick={() => setExhibits(prev => prev.filter(e => e.id !== item.id))}
-                    title="Remove"
-                  >✕</button>
-                </div>
-              ))
-            )}
+            <table className="museum-kill-table">
+              <thead>
+                <tr>
+                  <th>Enemy Type</th>
+                  <th>Slain</th>
+                </tr>
+              </thead>
+              <tbody>
+                {ENEMY_RANKS.map(({ key, color }) => {
+                  const count = killCounts?.[key] || 0;
+                  return (
+                    <tr key={key} className={count > 0 ? 'museum-kill-row--active' : ''}>
+                      <td>
+                        <span className="museum-kill-dot" style={{ background: color }} />
+                        {key}
+                      </td>
+                      <td className="museum-kill-count">{count}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+              <tfoot>
+                <tr className="museum-kill-total">
+                  <td>Total</td>
+                  <td className="museum-kill-count">{totalKills}</td>
+                </tr>
+              </tfoot>
+            </table>
           </div>
         </div>
 

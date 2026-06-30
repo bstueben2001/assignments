@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { fetchHealthGoals, createHealthGoal, updateHealthGoal, deleteHealthGoal } from './api/health';
-import { fetchBattleItems, createBattleItem, updateBattleItem, deleteBattleItem } from './api/battle';
+import { fetchBattleItems, createBattleItem, updateBattleItem, deleteBattleItem, slayBattleItem, getBattleKills } from './api/battle';
 import { signup as apiSignup, login as apiLogin } from './api/auth';
 
 export const CATEGORIES = [
@@ -17,6 +17,7 @@ const AppContext = createContext(null);
 
 export function AppProvider({ children }) {
   const [calendarEvents, setCalendarEvents] = useState([]);
+  const [killCounts, setKillCounts] = useState({});
   const [user, setUser] = useState(() => {
     const stored = localStorage.getItem('stalwart_user');
     return stored ? JSON.parse(stored) : null;
@@ -50,11 +51,13 @@ export function AppProvider({ children }) {
   useEffect(() => {
     if (!user) {
       setCalendarEvents([]);
+      setKillCounts({});
       return;
     }
-    Promise.all([fetchHealthGoals(), fetchBattleItems()])
-      .then(([health, battle]) => {
+    Promise.all([fetchHealthGoals(), fetchBattleItems(), getBattleKills()])
+      .then(([health, battle, kills]) => {
         setCalendarEvents([...health, ...battle]);
+        setKillCounts(kills);
       })
       .catch(console.error);
   }, [user]);
@@ -99,9 +102,23 @@ export function AppProvider({ children }) {
     setCalendarEvents(prev => prev.filter(e => e.id !== id));
   }
 
+  async function slayCalendarEvent(id) {
+    const event = calendarEvents.find(e => e.id === id);
+    if (event?.category === 'battle') {
+      try {
+        const { difficulty } = await slayBattleItem(id);
+        setKillCounts(prev => ({ ...prev, [difficulty]: (prev[difficulty] || 0) + 1 }));
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    setCalendarEvents(prev => prev.filter(e => e.id !== id));
+  }
+
   return (
     <AppContext.Provider value={{
-      calendarEvents, addCalendarEvent, editCalendarEvent, deleteCalendarEvent,
+      calendarEvents, addCalendarEvent, editCalendarEvent, deleteCalendarEvent, slayCalendarEvent,
+      killCounts,
       user, signup, login, logout,
       showAuth, authTab, openAuth, closeAuth,
     }}>

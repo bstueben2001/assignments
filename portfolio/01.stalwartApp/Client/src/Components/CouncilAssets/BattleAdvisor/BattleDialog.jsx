@@ -9,7 +9,7 @@ const SLIDERS = [
 
 const CHAMPION_HOURS = 2; // 120 min, always reserved
 
-export default function BattleDialog({ initialHours, isReview = false, onDeploy, onClose }) {
+export default function BattleDialog({ initialHours, isReview = false, onDeploy, onReset, onClose }) {
   const [hours, setHours] = useState(initialHours ?? { sleep: 0, work: 0, school: 0, commute: 0 });
 
   const total        = Object.values(hours).reduce((a, b) => a + b, 0);
@@ -38,7 +38,7 @@ export default function BattleDialog({ initialHours, isReview = false, onDeploy,
         <p className="battle-dialog-subtitle">
           {isReview
             ? 'Adjust your time allocation and confirm to update your deployed sprites.'
-            : 'Drag each slider to match how much time you spent on it today. The hours left over become your sprites.'}
+            : 'Plan how you will spend your day. The remaining time will become your sprites.'}
         </p>
 
         <div className="battle-dialog-sliders">
@@ -80,6 +80,9 @@ export default function BattleDialog({ initialHours, isReview = false, onDeploy,
         </div>
 
         <div className="battle-dialog-actions">
+          {isReview && (
+            <button className="battle-dialog-reset" onClick={onReset}>Reset Sprites</button>
+          )}
           <button className="dashboard-back" onClick={onClose}>Cancel</button>
           <button
             className="dashboard-add-btn"

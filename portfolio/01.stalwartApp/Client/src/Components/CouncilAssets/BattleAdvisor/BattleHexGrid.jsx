@@ -5,6 +5,12 @@ function readLS(key, fallback) {
   catch { return fallback; }
 }
 
+function formatMin(min) {
+  if (min <= 30) return `${min} min`;
+  const hrs = parseFloat((min / 60).toFixed(1));
+  return `${hrs} ${hrs === 1 ? 'hr' : 'hrs'}`;
+}
+
 const COLS = 12;
 const ROWS = 7;
 const S = 22;
@@ -52,11 +58,9 @@ const ENEMY_SLOTS = Array.from({ length: COLS - 6 }, (_, ci) => {
 
 const CHAMPION_KEY = `${Math.floor(ROWS / 2)},2`;
 
-const SLEEP_SLOTS = Array.from({ length: ROWS }, (_, row) => `${row},0`);
-
-const ALLY_SLOTS = Array.from({ length: 5 }, (_, ci) => {
-  const col = ci + 1;
-  return Array.from({ length: ROWS }, (_, row) => `${row},${col}`);
+// All sprite slots, cols 0→5 left-to-right. Sleep sprites fill first, normal sprites follow.
+const SPRITE_SLOTS = Array.from({ length: 6 }, (_, ci) => {
+  return Array.from({ length: ROWS }, (_, row) => `${row},${ci}`);
 }).flat().filter(k => k !== CHAMPION_KEY);
 
 function darkFill(hex) {
@@ -75,14 +79,40 @@ const CHAMP_STROKE = '#e07830';
 const EMPTY_FILL   = 'rgba(14,18,38,0.5)';
 const EMPTY_STROKE = '#2a3255';
 
+const SPRITE_HEX_PARTICLES = Array.from({ length: 40 }, (_, i) => ({
+  id:       i,
+  cx:       (i % 9 - 4) * 2.2,
+  cy:       (i % 5 - 2) * 1.8,
+  r:        0.35 + (i % 4) * 0.28,
+  dx:       20 + (i % 8) * 8,
+  dy:       45 + (i % 6) * 12,
+  delay:    (-((i / 40) * 2.4)).toFixed(2),
+  duration: (2.0 + (i % 4) * 0.4).toFixed(1),
+}));
+
+const CHAMP_HEX_PARTICLES = Array.from({ length: 30 }, (_, i) => ({
+  id:       i,
+  cx:       (i % 9 - 4) * 2.5,
+  cy:       (i % 5 - 2) * 2.0,
+  r:        0.4 + (i % 4) * 0.32,
+  dx:       22 + (i % 7) * 9,
+  dy:       48 + (i % 5) * 13,
+  delay:    (-((i / 30) * 2.8)).toFixed(2),
+  duration: (2.2 + (i % 4) * 0.45).toFixed(2),
+}));
+
 function makeInitialSpriteMap() {
   return { [CHAMPION_KEY]: { type: 'champion', min: 120, maxMin: 120 } };
 }
 
 export default function BattleHexGrid({ enemies = [], spriteCount = 0, sleepSpriteCount = 0, deployId = 0, onSlay, onHpChange, highlightedEnemyId = null }) {
-  const [spriteMap, setSpriteMap] = useState(() => readLS('battle_spriteMap', makeInitialSpriteMap()));
-  const [selected,  setSelected]  = useState(null);
-  const [enemyHp,   setEnemyHp]   = useState(() => readLS('battle_enemyHp', {}));
+  const [spriteMap,     setSpriteMap]     = useState(() => readLS('battle_spriteMap', makeInitialSpriteMap()));
+  const [selected,      setSelected]      = useState(() => new Set());
+  const [enemyHp,       setEnemyHp]       = useState(() => readLS('battle_enemyHp', {}));
+  const [pendingAttack, setPendingAttack] = useState(null); // { enemy, keys: string[] }
+  const [tooltip,       setTooltip]       = useState(null); // { enemy, x, y }
+  const [hoveredHex,    setHoveredHex]    = useState(null);
+  const hoverClearRef = useRef(null);
 
   // Only reset when deployId actually increments — not on mount or StrictMode double-invoke
   const prevDeployId = useRef(deployId);
@@ -91,15 +121,15 @@ export default function BattleHexGrid({ enemies = [], spriteCount = 0, sleepSpri
     if (prevDeployId.current === deployId) return;
     prevDeployId.current = deployId;
     const next = { [CHAMPION_KEY]: { type: 'champion', min: 120, maxMin: 120 } };
-    ALLY_SLOTS.slice(0, spriteCount).forEach(key => {
-      next[key] = { type: 'ally', min: 60, maxMin: 60 };
-    });
-    SLEEP_SLOTS.slice(0, sleepSpriteCount).forEach(key => {
+    SPRITE_SLOTS.slice(0, sleepSpriteCount).forEach(key => {
       next[key] = { type: 'sleep', min: 60, maxMin: 60 };
     });
+    SPRITE_SLOTS.slice(sleepSpriteCount, sleepSpriteCount + spriteCount).forEach(key => {
+      next[key] = { type: 'ally', min: 60, maxMin: 60 };
+    });
     setSpriteMap(next);
-    setSelected(null);
-    setEnemyHp({});
+    setSelected(new Set());
+    setPendingAttack(null);
   }, [deployId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Persist combat state
@@ -126,45 +156,87 @@ export default function BattleHexGrid({ enemies = [], spriteCount = 0, sleepSpri
   }
 
   function handleSpriteClick(key) {
+    if (pendingAttack) return;
+    if (key === CHAMPION_KEY) return;
     const sprite = spriteMap[key];
     if (!sprite || sprite.min <= 0) return;
-    setSelected(prev => prev === key ? null : key);
+    if (sprite.type === 'sleep') {
+      const alliesRemain = Object.values(spriteMap).some(s => s.type === 'ally' && s.min > 0);
+      if (alliesRemain) return;
+    }
+    setSelected(prev => {
+      const next = new Set(prev);
+      next.has(key) ? next.delete(key) : next.add(key);
+      return next;
+    });
   }
 
   function handleEnemyClick(enemy) {
-    if (!selected) return;
-    const sprite = spriteMap[selected];
-    if (!sprite || sprite.min <= 0) { setSelected(null); return; }
-
+    if (pendingAttack || selected.size === 0) return;
     const currentHp = getEnemyHp(enemy);
-    if (currentHp <= 0) { setSelected(null); return; }
+    if (currentHp <= 0) return;
+    const keys = [...selected].filter(k => spriteMap[k]?.min > 0);
+    if (keys.length === 0) { setSelected(new Set()); return; }
+    setPendingAttack({ enemy, keys });
+  }
 
-    if (sprite.min >= currentHp) {
-      const leftover = sprite.min - currentHp;
-      setSpriteMap(prev => ({ ...prev, [selected]: { ...prev[selected], min: leftover } }));
+  function executeAttack() {
+    const { enemy, keys } = pendingAttack;
+    const currentHp = getEnemyHp(enemy);
+    const sprites = keys.map(k => ({ key: k, ...spriteMap[k] })).filter(s => s.min > 0);
+    const totalMin = sprites.reduce((sum, s) => sum + s.min, 0);
+
+    setSpriteMap(prev => {
+      const next = { ...prev };
+      if (totalMin >= currentHp) {
+        let toPay = currentHp;
+        for (const s of sprites) {
+          if (toPay <= 0) break;
+          if (s.min <= toPay) {
+            delete next[s.key];
+            toPay -= s.min;
+          } else {
+            next[s.key] = { ...next[s.key], min: s.min - toPay };
+            toPay = 0;
+          }
+        }
+      } else {
+        sprites.forEach(s => { delete next[s.key]; });
+      }
+      return next;
+    });
+
+    if (totalMin >= currentHp) {
       setEnemyHp(prev => ({ ...prev, [enemy.id]: 0 }));
       onSlay?.(enemy.id);
     } else {
-      setSpriteMap(prev => ({ ...prev, [selected]: { ...prev[selected], min: 0 } }));
-      setEnemyHp(prev => ({ ...prev, [enemy.id]: currentHp - sprite.min }));
+      setEnemyHp(prev => ({ ...prev, [enemy.id]: currentHp - totalMin }));
     }
-    setSelected(null);
+    setPendingAttack(null);
+    setSelected(new Set());
+  }
+
+  function cancelAttack() {
+    setPendingAttack(null);
   }
 
   const hasAnything = spriteCount > 0 || sleepSpriteCount > 0;
 
   return (
     <div className="hex-grid-wrapper">
-      {selected && (
+      {selected.size > 0 && !pendingAttack && (
         <div className="hex-grid-select-hint">
-          Select an enemy to attack · <button className="hex-grid-deselect" onClick={() => setSelected(null)}>Cancel</button>
+          {selected.size} sprite{selected.size !== 1 ? 's' : ''} selected
+          {' · '}{formatMin([...selected].reduce((sum, k) => sum + (spriteMap[k]?.min ?? 0), 0))}
+          {' · '}Select an enemy to attack
+          {' · '}<button className="hex-grid-deselect" onClick={() => setSelected(new Set())}>Cancel</button>
         </div>
       )}
       <svg
         viewBox={`0 0 ${GRID_W.toFixed(1)} ${GRID_H.toFixed(1)}`}
         className="hex-grid-svg"
         preserveAspectRatio="xMidYMid meet"
-        onClick={() => setSelected(null)}
+        onClick={() => { if (!pendingAttack) setSelected(new Set()); }}
       >
         {Array.from({ length: ROWS }, (_, r) =>
           Array.from({ length: COLS }, (_, c) => {
@@ -185,14 +257,16 @@ export default function BattleHexGrid({ enemies = [], spriteCount = 0, sleepSpri
               }
               const color       = DIFF_COLORS[enemy.difficulty] ?? DIFF_COLORS.Minion;
               const maxHp       = DIFF_MIN[enemy.difficulty] ?? 10;
-              const isTarget    = !!selected;
+              const isTarget    = selected.size > 0;
               const isHighlight = enemy.id === highlightedEnemyId;
               return (
                 <g key={key} transform={`translate(${x.toFixed(2)},${y.toFixed(2)})`}
                   onClick={e => { e.stopPropagation(); handleEnemyClick(enemy); }}
+                  onMouseEnter={e => setTooltip({ label: enemy.title, sub: `${formatMin(currentHp)} / ${formatMin(maxHp)}`, color: '#c44040', x: e.clientX, y: e.clientY })}
+                  onMouseMove={e  => setTooltip(prev => prev ? { ...prev, x: e.clientX, y: e.clientY } : null)}
+                  onMouseLeave={() => setTooltip(null)}
                   style={{ cursor: isTarget ? 'crosshair' : 'default' }}
                 >
-                  <title>{enemy.title} · {enemy.difficulty} · {currentHp} / {maxHp} min</title>
                   <polygon
                     className={`hex-cell hex-cell--enemy${isTarget ? ' hex-cell--targetable' : ''}${isHighlight ? ' hex-cell--selected' : ''}`}
                     points={HEX_PTS}
@@ -208,21 +282,23 @@ export default function BattleHexGrid({ enemies = [], spriteCount = 0, sleepSpri
             if (key === CHAMPION_KEY) {
               const champData = spriteMap[CHAMPION_KEY];
               const champMin  = champData?.min ?? 120;
-              const isSelected = selected === CHAMPION_KEY;
-              const isDepleted = champMin <= 0;
               return (
                 <g key={key} transform={`translate(${x.toFixed(2)},${y.toFixed(2)})`}
-                  onClick={e => { e.stopPropagation(); handleSpriteClick(CHAMPION_KEY); }}
-                  style={{ cursor: isDepleted ? 'default' : 'pointer' }}
+                  style={{ cursor: 'not-allowed' }}
+                  onMouseEnter={e => setTooltip({ label: 'Stalwart Champion', sub: `${formatMin(champMin)} / ${formatMin(120)}`, color: CHAMP_STROKE, x: e.clientX, y: e.clientY })}
+                  onMouseMove={e  => setTooltip(prev => prev ? { ...prev, x: e.clientX, y: e.clientY } : null)}
+                  onMouseLeave={() => setTooltip(null)}
                 >
-                  <title>Stalwart Champion (You) · {champMin} / 120 min</title>
+                  {CHAMP_HEX_PARTICLES.map(p => (
+                    <circle key={p.id} className="champ-hex-particle" r={p.r} cx={p.cx} cy={p.cy}
+                      style={{ '--pdx': `${p.dx}px`, '--pdy': `${p.dy}px`, animationDelay: `${p.delay}s`, animationDuration: `${p.duration}s` }} />
+                  ))}
                   <polygon
-                    className={`hex-cell${isSelected ? ' hex-cell--selected' : ''}`}
+                    className="hex-cell"
                     points={HEX_PTS}
-                    fill={isDepleted ? 'rgba(14,18,38,0.5)' : CHAMP_FILL}
-                    stroke={isDepleted ? '#3a2010' : CHAMP_STROKE}
+                    fill={CHAMP_FILL}
+                    stroke={CHAMP_STROKE}
                     strokeWidth="2"
-                    opacity={isDepleted ? 0.4 : 1}
                   />
                 </g>
               );
@@ -232,17 +308,23 @@ export default function BattleHexGrid({ enemies = [], spriteCount = 0, sleepSpri
             const sprite = spriteMap[key];
             if (sprite && sprite.min > 0) {
               const isAlly     = sprite.type === 'ally';
-              const isSelected = selected === key;
+              const isSelected = selected.has(key);
               const fill   = isAlly ? ALLY_FILL   : SLEEP_FILL;
               const stroke = isAlly ? ALLY_STROKE  : SLEEP_STROKE;
               return (
                 <g key={key} transform={`translate(${x.toFixed(2)},${y.toFixed(2)})`}
                   onClick={e => { e.stopPropagation(); handleSpriteClick(key); }}
                   style={{ cursor: 'pointer' }}
+                  onMouseEnter={e => { clearTimeout(hoverClearRef.current); setHoveredHex(key); setTooltip({ label: isAlly ? 'Sprite' : 'Sleep Sprite', sub: `${formatMin(sprite.min)} / ${formatMin(sprite.maxMin)}`, color: stroke, x: e.clientX, y: e.clientY }); }}
+                  onMouseMove={e  => setTooltip(prev => prev ? { ...prev, x: e.clientX, y: e.clientY } : null)}
+                  onMouseLeave={() => { hoverClearRef.current = setTimeout(() => setHoveredHex(null), 700); setTooltip(null); }}
                 >
-                  <title>{isAlly ? 'Sprite' : 'Sleep Sprites'} · {sprite.min} / {sprite.maxMin} min</title>
+                  {(isSelected || hoveredHex === key) && SPRITE_HEX_PARTICLES.map(p => (
+                    <circle key={p.id} className="sprite-hex-particle" r={p.r} cx={p.cx} cy={p.cy}
+                      style={{ '--pdx': `${p.dx}px`, '--pdy': `${p.dy}px`, animationDelay: `${p.delay}s`, animationDuration: `${p.duration}s` }} />
+                  ))}
                   <polygon
-                    className={`hex-cell${isSelected ? ' hex-cell--selected' : ''}`}
+                    className={`hex-cell${isSelected ? ' hex-cell--selected-sprite' : ''}`}
                     points={HEX_PTS}
                     fill={fill}
                     stroke={stroke}
@@ -261,6 +343,39 @@ export default function BattleHexGrid({ enemies = [], spriteCount = 0, sleepSpri
           })
         )}
       </svg>
+      {tooltip && (
+        <div className="hex-tooltip" style={{ left: tooltip.x + 14, top: tooltip.y - 10, '--tc': tooltip.color }}>
+          <span className="hex-tooltip-name">{tooltip.label}</span>
+          <span className="hex-tooltip-sub">{tooltip.sub}</span>
+        </div>
+      )}
+      {pendingAttack && (() => {
+        const { enemy, keys } = pendingAttack;
+        const currentHp  = getEnemyHp(enemy);
+        const totalMin   = keys.reduce((sum, k) => sum + (spriteMap[k]?.min ?? 0), 0);
+        const willSlay   = totalMin >= currentHp;
+        return (
+          <div className="hex-attack-confirm">
+            <div className="hex-attack-confirm-header">
+              <span className="hex-attack-confirm-title">Confirm Attack</span>
+            </div>
+            <div className="hex-attack-confirm-body">
+              <span className="hex-attack-target">{enemy.title}</span>
+              <span className="hex-attack-meta">
+                {keys.length} sprite{keys.length !== 1 ? 's' : ''} · <strong>{formatMin(totalMin)}</strong> vs <strong>{formatMin(currentHp)}</strong>
+              </span>
+              {willSlay
+                ? <span className="hex-attack-result hex-attack-result--slay">Killing blow — enemy will be slain</span>
+                : <span className="hex-attack-result hex-attack-result--dmg">Enemy takes {formatMin(totalMin)} damage ({formatMin(currentHp - totalMin)} remaining)</span>
+              }
+            </div>
+            <div className="hex-attack-confirm-actions">
+              <button className="hex-attack-cancel" onClick={cancelAttack}>Cancel</button>
+              <button className="hex-attack-execute" onClick={executeAttack}>Attack</button>
+            </div>
+          </div>
+        );
+      })()}
       <div className="hex-grid-footer">
         <div className="hex-grid-legend">
           <span className="hex-legend-item">
@@ -274,10 +389,6 @@ export default function BattleHexGrid({ enemies = [], spriteCount = 0, sleepSpri
           <span className="hex-legend-item">
             <span className="hex-legend-swatch" style={{ background: ALLY_STROKE }} />
             Sprites
-          </span>
-          <span className="hex-legend-item">
-            <span className="hex-legend-swatch" style={{ background: '#c44040' }} />
-            <span style={{ opacity: 0.55, fontStyle: 'italic' }}>(hover for stats)</span>
           </span>
         </div>
         {hasAnything && (

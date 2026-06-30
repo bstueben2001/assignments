@@ -4,6 +4,12 @@ function readLS(key, fallback) {
   try { const v = localStorage.getItem(key); return v !== null ? JSON.parse(v) : fallback; }
   catch { return fallback; }
 }
+
+function formatMin(min) {
+  if (min <= 30) return `${min} min`;
+  const hrs = parseFloat((min / 60).toFixed(1));
+  return `${hrs} ${hrs === 1 ? 'hr' : 'hrs'}`;
+}
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../../../Context';
 import generalRoman from './generalRoman.png';
@@ -11,6 +17,16 @@ import BattleHexGrid from './BattleHexGrid';
 import BattleDialog from './BattleDialog';
 
 const DIFFICULTIES = ['Minion', 'Captain', 'Champion', 'Commander', 'General', 'Overlord', 'Prophet', 'Emperor', 'God'];
+
+const DEPLOY_BTN_PARTICLES = Array.from({ length: 44 }, (_, i) => ({
+  id:    i,
+  sx:    (i % 9 - 4) * 9,
+  sdx:   20 + (i % 10) * 12,
+  sdy:   90 + (i % 6) * 25,
+  size:  1 + (i % 3),
+  delay: (-((i / 44) * 0.9)).toFixed(2),
+  dur:   (1.0 + (i % 4) * 0.25).toFixed(2),
+}));
 
 const DIFFICULTY_COLORS = {
   Minion:    '#8888a0',
@@ -88,7 +104,7 @@ function BattleEnemyItem({ item, onEdit, onDelete, slaying = false, currentHp, m
           onChange={e => setForm(f => ({ ...f, difficulty: e.target.value }))}
           style={{ '--diff-color': diffColor }}
         >
-          {DIFFICULTIES.map(d => <option key={d} value={d}>{d} ({DIFFICULTY_MIN[d]} min)</option>)}
+          {DIFFICULTIES.map(d => <option key={d} value={d}>{d} ({formatMin(DIFFICULTY_MIN[d])})</option>)}
         </select>
         <input className="dashboard-input dashboard-input--date goal-edit-input" type="date" value={form.date} onChange={e => setForm(f => ({ ...f, date: e.target.value }))} />
         <input className="dashboard-input goal-edit-input" type="text" placeholder="Notes (optional)" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} />
@@ -119,13 +135,13 @@ function BattleEnemyItem({ item, onEdit, onDelete, slaying = false, currentHp, m
       <div className="battle-enemy-summary">
         <span className="dashboard-item-title">{item.title}</span>
         <span className="battle-difficulty-badge">{item.difficulty ?? 'Minion'}</span>
-        <span className="battle-min-badge">{DIFFICULTY_MIN[item.difficulty ?? 'Minion']} min</span>
+        <span className="battle-min-badge">{formatMin(DIFFICULTY_MIN[item.difficulty ?? 'Minion'])}</span>
       </div>
       {expanded && (
         <div className="battle-enemy-details" onClick={e => e.stopPropagation()}>
           {displayHp !== undefined && (
             <span className={`battle-enemy-hp${hpIsDamaged ? ' battle-enemy-hp--damaged' : ''}`}>
-              {displayHp} / {maxHp} min remaining
+              {formatMin(displayHp)} / {formatMin(maxHp)} remaining
             </span>
           )}
           <span className="dashboard-item-date">{formatDate(item.date)}</span>
@@ -142,7 +158,7 @@ function BattleEnemyItem({ item, onEdit, onDelete, slaying = false, currentHp, m
 
 function BattleDashboard() {
   const navigate = useNavigate();
-  const { calendarEvents, addCalendarEvent, editCalendarEvent, deleteCalendarEvent } = useAppContext();
+  const { calendarEvents, addCalendarEvent, editCalendarEvent, deleteCalendarEvent, slayCalendarEvent } = useAppContext();
   const [form, setForm]         = useState(EMPTY_FORM);
   const [error, setError]       = useState('');
   const [showDialog, setShowDialog]             = useState(false);
@@ -170,10 +186,18 @@ function BattleDashboard() {
     setShowDialog(false);
   }
 
+  function handleReset() {
+    setSpriteCount(0);
+    setSleepSpriteCount(0);
+    setHasDeployed(false);
+    setDeployId(prev => prev + 1);
+    setShowDialog(false);
+  }
+
   function handleSlay(enemyId) {
     setSlayingIds(prev => new Set([...prev, enemyId]));
     setTimeout(() => {
-      deleteCalendarEvent(enemyId);
+      slayCalendarEvent(enemyId);
       setSlayingIds(prev => { const n = new Set(prev); n.delete(enemyId); return n; });
     }, 1800);
   }
@@ -217,7 +241,7 @@ function BattleDashboard() {
             style={{ '--diff-color': DIFFICULTY_COLORS[form.difficulty] }}
           >
             {DIFFICULTIES.map(d => (
-              <option key={d} value={d}>{d}</option>
+              <option key={d} value={d}>{d} ({formatMin(DIFFICULTY_MIN[d])})</option>
             ))}
           </select>
           <input
@@ -266,9 +290,22 @@ function BattleDashboard() {
         <div className="dashboard-panel">
           <div className="dashboard-panel-heading battle-panel-heading">
             Battlefield Map
-            <button className="battle-panel-btn" onClick={() => setShowDialog(true)}>
-              {hasDeployed ? 'Review Sprites' : 'Deploy Sprites'}
-            </button>
+            <div className="sprite-btn-fx">
+              {DEPLOY_BTN_PARTICLES.map(p => (
+                <span key={p.id} className="sprite-btn-particle" style={{
+                  '--sx':  `${p.sx}px`,
+                  '--sdx': `${p.sdx}px`,
+                  '--sdy': `${p.sdy}px`,
+                  width:   `${p.size}px`,
+                  height:  `${p.size}px`,
+                  animationDelay:    `${p.delay}s`,
+                  animationDuration: `${p.dur}s`,
+                }} />
+              ))}
+              <button className="battle-panel-btn" onClick={() => setShowDialog(true)}>
+                {hasDeployed ? 'Review Sprites' : 'Deploy Sprites'}
+              </button>
+            </div>
           </div>
           <div className="dashboard-panel-content dashboard-panel-content--flush">
             <BattleHexGrid
@@ -290,6 +327,7 @@ function BattleDashboard() {
           initialHours={savedHours}
           isReview={hasDeployed}
           onDeploy={handleDeploy}
+          onReset={handleReset}
           onClose={() => setShowDialog(false)}
         />
       )}
