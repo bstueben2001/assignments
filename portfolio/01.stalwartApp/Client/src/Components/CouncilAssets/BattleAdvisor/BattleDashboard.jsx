@@ -1,8 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+function readLS(key, fallback) {
+  try { const v = localStorage.getItem(key); return v !== null ? JSON.parse(v) : fallback; }
+  catch { return fallback; }
+}
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../../../Context';
 import generalRoman from './generalRoman.png';
 import BattleHexGrid from './BattleHexGrid';
+import BattleDialog from './BattleDialog';
 
 const DIFFICULTIES = ['Minion', 'Captain', 'Champion', 'Commander', 'General', 'Overlord', 'Prophet', 'Emperor', 'God'];
 
@@ -18,6 +24,18 @@ const DIFFICULTY_COLORS = {
   God:       '#ffd700',
 };
 
+const DIFFICULTY_MIN = {
+  Minion:    10,
+  Captain:   30,
+  Champion:  60,
+  Commander: 180,
+  General:   360,
+  Overlord:  720,
+  Prophet:   1440,
+  Emperor:   3000,
+  God:       6000,
+};
+
 const EMPTY_FORM = { title: '', description: '', date: '', difficulty: 'Minion' };
 
 function formatDate(dateKey) {
@@ -27,8 +45,9 @@ function formatDate(dateKey) {
   });
 }
 
-function BattleEnemyItem({ item, onEdit, onDelete }) {
-  const [editing, setEditing] = useState(false);
+function BattleEnemyItem({ item, onEdit, onDelete, slaying = false, currentHp, maxHp, onExpand, onCollapse }) {
+  const [expanded, setExpanded] = useState(false);
+  const [editing,  setEditing]  = useState(false);
   const [form, setForm] = useState({
     title:       item.title,
     difficulty:  item.difficulty ?? 'Minion',
@@ -43,6 +62,20 @@ function BattleEnemyItem({ item, onEdit, onDelete }) {
     if (!form.title.trim()) return;
     onEdit(item.id, { title: form.title.trim(), difficulty: form.difficulty, date: form.date, description: form.description });
     setEditing(false);
+    setExpanded(false);
+  }
+
+  const itemDiffColor = DIFFICULTY_COLORS[item.difficulty] ?? DIFFICULTY_COLORS.Minion;
+
+  if (slaying) {
+    return (
+      <div className="dashboard-item battle-enemy-item battle-enemy-item--slaying" style={{ '--diff-color': itemDiffColor }}>
+        <div className="battle-enemy-summary">
+          <span className="dashboard-item-title">{item.title}</span>
+          <span className="battle-slay-label">SLAIN!</span>
+        </div>
+      </div>
+    );
   }
 
   if (editing) {
@@ -55,7 +88,7 @@ function BattleEnemyItem({ item, onEdit, onDelete }) {
           onChange={e => setForm(f => ({ ...f, difficulty: e.target.value }))}
           style={{ '--diff-color': diffColor }}
         >
-          {DIFFICULTIES.map(d => <option key={d} value={d}>{d}</option>)}
+          {DIFFICULTIES.map(d => <option key={d} value={d}>{d} ({DIFFICULTY_MIN[d]} min)</option>)}
         </select>
         <input className="dashboard-input dashboard-input--date goal-edit-input" type="date" value={form.date} onChange={e => setForm(f => ({ ...f, date: e.target.value }))} />
         <input className="dashboard-input goal-edit-input" type="text" placeholder="Notes (optional)" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} />
@@ -67,19 +100,42 @@ function BattleEnemyItem({ item, onEdit, onDelete }) {
     );
   }
 
-  const itemDiffColor = DIFFICULTY_COLORS[item.difficulty] ?? DIFFICULTY_COLORS.Minion;
+  function toggleExpanded() {
+    const next = !expanded;
+    setExpanded(next);
+    if (next) onExpand?.(item.id);
+    else onCollapse?.();
+  }
+
+  const displayHp  = currentHp ?? maxHp;
+  const hpIsDamaged = displayHp !== undefined && maxHp !== undefined && displayHp < maxHp;
+
   return (
-    <div className="dashboard-item battle-enemy-item" style={{ '--diff-color': itemDiffColor }}>
-      <div className="dashboard-item-body">
+    <div
+      className={`dashboard-item battle-enemy-item${expanded ? ' battle-enemy-item--expanded' : ''}`}
+      style={{ '--diff-color': itemDiffColor }}
+      onClick={toggleExpanded}
+    >
+      <div className="battle-enemy-summary">
         <span className="dashboard-item-title">{item.title}</span>
         <span className="battle-difficulty-badge">{item.difficulty ?? 'Minion'}</span>
-        <span className="dashboard-item-date">{formatDate(item.date)}</span>
-        {item.description && <span className="dashboard-item-desc">{item.description}</span>}
+        <span className="battle-min-badge">{DIFFICULTY_MIN[item.difficulty ?? 'Minion']} min</span>
       </div>
-      <div className="goal-item-actions">
-        <button className="goal-edit-btn" onClick={() => setEditing(true)} title="Edit">✎</button>
-        <button className="dashboard-item-delete" onClick={() => onDelete(item.id)} title="Remove">✕</button>
-      </div>
+      {expanded && (
+        <div className="battle-enemy-details" onClick={e => e.stopPropagation()}>
+          {displayHp !== undefined && (
+            <span className={`battle-enemy-hp${hpIsDamaged ? ' battle-enemy-hp--damaged' : ''}`}>
+              {displayHp} / {maxHp} min remaining
+            </span>
+          )}
+          <span className="dashboard-item-date">{formatDate(item.date)}</span>
+          {item.description && <span className="dashboard-item-desc">{item.description}</span>}
+          <div className="goal-item-actions">
+            <button className="goal-edit-btn" onClick={() => { setEditing(true); onCollapse?.(); }} title="Edit">✎</button>
+            <button className="dashboard-item-delete" onClick={() => onDelete(item.id)} title="Remove">✕</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -87,8 +143,40 @@ function BattleEnemyItem({ item, onEdit, onDelete }) {
 function BattleDashboard() {
   const navigate = useNavigate();
   const { calendarEvents, addCalendarEvent, editCalendarEvent, deleteCalendarEvent } = useAppContext();
-  const [form, setForm]   = useState(EMPTY_FORM);
-  const [error, setError] = useState('');
+  const [form, setForm]         = useState(EMPTY_FORM);
+  const [error, setError]       = useState('');
+  const [showDialog, setShowDialog]             = useState(false);
+  const [hasDeployed, setHasDeployed]           = useState(() => readLS('battle_hasDeployed', false));
+  const [savedHours, setSavedHours]             = useState(() => readLS('battle_savedHours', { sleep: 0, work: 0, school: 0, commute: 0 }));
+  const [spriteCount, setSpriteCount]           = useState(() => readLS('battle_spriteCount', 0));
+  const [sleepSpriteCount, setSleepSpriteCount] = useState(() => readLS('battle_sleepSpriteCount', 0));
+  const [deployId, setDeployId]                 = useState(() => readLS('battle_deployId', 0));
+  const [slayingIds, setSlayingIds]             = useState(new Set());
+  const [enemyHpSnapshot, setEnemyHpSnapshot]   = useState({});
+  const [highlightedEnemyId, setHighlightedEnemyId] = useState(null);
+
+  useEffect(() => { localStorage.setItem('battle_hasDeployed',    JSON.stringify(hasDeployed));    }, [hasDeployed]);
+  useEffect(() => { localStorage.setItem('battle_savedHours',     JSON.stringify(savedHours));     }, [savedHours]);
+  useEffect(() => { localStorage.setItem('battle_spriteCount',    JSON.stringify(spriteCount));    }, [spriteCount]);
+  useEffect(() => { localStorage.setItem('battle_sleepSpriteCount', JSON.stringify(sleepSpriteCount)); }, [sleepSpriteCount]);
+  useEffect(() => { localStorage.setItem('battle_deployId',       JSON.stringify(deployId));       }, [deployId]);
+
+  function handleDeploy({ sprites, sleepSprites, hours }) {
+    setSpriteCount(sprites);
+    setSleepSpriteCount(sleepSprites);
+    setSavedHours(hours);
+    setHasDeployed(true);
+    setDeployId(prev => prev + 1);
+    setShowDialog(false);
+  }
+
+  function handleSlay(enemyId) {
+    setSlayingIds(prev => new Set([...prev, enemyId]));
+    setTimeout(() => {
+      deleteCalendarEvent(enemyId);
+      setSlayingIds(prev => { const n = new Set(prev); n.delete(enemyId); return n; });
+    }, 1800);
+  }
 
   const enemies = calendarEvents
     .filter(e => e.category === 'battle')
@@ -164,6 +252,11 @@ function BattleDashboard() {
                   item={item}
                   onEdit={editCalendarEvent}
                   onDelete={deleteCalendarEvent}
+                  slaying={slayingIds.has(item.id)}
+                  maxHp={DIFFICULTY_MIN[item.difficulty ?? 'Minion']}
+                  currentHp={enemyHpSnapshot[item.id] !== undefined ? enemyHpSnapshot[item.id] : DIFFICULTY_MIN[item.difficulty ?? 'Minion']}
+                  onExpand={id => setHighlightedEnemyId(id)}
+                  onCollapse={() => setHighlightedEnemyId(null)}
                 />
               ))
             )}
@@ -171,13 +264,35 @@ function BattleDashboard() {
         </div>
 
         <div className="dashboard-panel">
-          <div className="dashboard-panel-heading">Battlefield Map</div>
+          <div className="dashboard-panel-heading battle-panel-heading">
+            Battlefield Map
+            <button className="battle-panel-btn" onClick={() => setShowDialog(true)}>
+              {hasDeployed ? 'Review Sprites' : 'Deploy Sprites'}
+            </button>
+          </div>
           <div className="dashboard-panel-content dashboard-panel-content--flush">
-            <BattleHexGrid enemies={enemies} />
+            <BattleHexGrid
+              enemies={enemies}
+              spriteCount={spriteCount}
+              sleepSpriteCount={sleepSpriteCount}
+              deployId={deployId}
+              onSlay={handleSlay}
+              onHpChange={setEnemyHpSnapshot}
+              highlightedEnemyId={highlightedEnemyId}
+            />
           </div>
         </div>
 
       </div>
+
+      {showDialog && (
+        <BattleDialog
+          initialHours={savedHours}
+          isReview={hasDeployed}
+          onDeploy={handleDeploy}
+          onClose={() => setShowDialog(false)}
+        />
+      )}
 
     </div>
   );
