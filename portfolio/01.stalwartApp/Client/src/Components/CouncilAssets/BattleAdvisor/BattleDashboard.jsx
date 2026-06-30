@@ -2,14 +2,20 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../../../Context';
 import generalRoman from './generalRoman.png';
+import BattleHexGrid from './BattleHexGrid';
 
-const DIFFICULTIES = ['Minion', 'Champion', 'Overlord', 'Emperor'];
+const DIFFICULTIES = ['Minion', 'Captain', 'Champion', 'Commander', 'General', 'Overlord', 'Prophet', 'Emperor', 'God'];
 
 const DIFFICULTY_COLORS = {
-  Minion:   '#8888a0',
-  Champion: '#c9a84c',
-  Overlord: '#c44040',
-  Emperor:  '#9b6bd4',
+  Minion:    '#8888a0',
+  Captain:   '#5b9e5b',
+  Champion:  '#c9a84c',
+  Commander: '#4a8fbc',
+  General:   '#c87840',
+  Overlord:  '#c44040',
+  Prophet:   '#8844cc',
+  Emperor:   '#9b6bd4',
+  God:       '#ffd700',
 };
 
 const EMPTY_FORM = { title: '', description: '', date: '', difficulty: 'Minion' };
@@ -165,9 +171,9 @@ function BattleDashboard() {
         </div>
 
         <div className="dashboard-panel">
-          <div className="dashboard-panel-heading">Analytics & Suggestions</div>
-          <div className="dashboard-panel-content">
-            <p className="dashboard-panel-placeholder">Graphs and suggestions coming soon.</p>
+          <div className="dashboard-panel-heading">Battlefield Map</div>
+          <div className="dashboard-panel-content dashboard-panel-content--flush">
+            <BattleHexGrid enemies={enemies} />
           </div>
         </div>
 

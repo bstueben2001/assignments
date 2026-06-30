@@ -8,7 +8,7 @@ const battleItemSchema = new mongoose.Schema({
   category:    { type: String, default: 'battle' },
   difficulty:  {
     type:    String,
-    enum:    ['Minion', 'Champion', 'Overlord', 'Emperor'],
+    enum:    ['Minion', 'Captain', 'Champion', 'Commander', 'General', 'Overlord', 'Prophet', 'Emperor', 'God'],
     default: 'Minion',
   },
 }, { timestamps: true });
