@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import curatorDyllan from './curatorDyllan.png';
 
 const EMPTY_FORM = { title: '', description: '' };
 
@@ -19,10 +20,11 @@ function MuseumDashboard() {
 
   return (
     <div className="dashboard-page" style={{ '--advisor-color': '#c4714a' }}>
+      <img src={curatorDyllan} alt="" className="advisor-char-img" />
 
       <div className="dashboard-header">
         <button className="dashboard-back" onClick={() => navigate('/council')}>← Council</button>
-        <h1 className="dashboard-title">The Museum</h1>
+        <h1 className="dashboard-title">Curator Dyllan - The Museum</h1>
       </div>
 
       <form className="dashboard-form" onSubmit={handleAdd}>

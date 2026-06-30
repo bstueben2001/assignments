@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../../../Context';
+import coachJaydin from './coachJaydin.png';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
 } from 'recharts';
@@ -386,10 +387,11 @@ function HealthDashboard() {
 
   return (
     <div className="dashboard-page" style={{ '--advisor-color': '#4caf82' }}>
+      <img src={coachJaydin} alt="" className="health-coach-img" />
 
       <div className="dashboard-header">
         <button className="dashboard-back" onClick={() => navigate('/council')}>← Council</button>
-        <h1 className="dashboard-title">Health Advisor</h1>
+        <h1 className="dashboard-title">Coach Jaydin - Health Advisor</h1>
       </div>
 
       <div className="health-date-bar">

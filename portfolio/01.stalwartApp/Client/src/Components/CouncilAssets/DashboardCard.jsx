@@ -55,7 +55,7 @@ function DashboardItem({ item, advisorColor, onEdit, onDelete }) {
   );
 }
 
-function DashboardCard({ category }) {
+function DashboardCard({ category, image, namePrefix }) {
   const navigate = useNavigate();
   const { calendarEvents, addCalendarEvent, editCalendarEvent, deleteCalendarEvent } = useAppContext();
   const [form, setForm] = useState(EMPTY_FORM);
@@ -77,10 +77,11 @@ function DashboardCard({ category }) {
 
   return (
     <div className="dashboard-page" style={{ '--advisor-color': config?.color }}>
+      {image && <img src={image} alt="" className="advisor-char-img" />}
 
       <div className="dashboard-header">
         <button className="dashboard-back" onClick={() => navigate('/council')}>← Council</button>
-        <h1 className="dashboard-title">{config?.label} Advisor</h1>
+        <h1 className="dashboard-title">{namePrefix ? `${namePrefix} - ` : ''}{config?.label} Advisor</h1>
       </div>
 
       <form className="dashboard-form" onSubmit={handleAdd}>

@@ -978,6 +978,48 @@ nav a.active {
   min-height: 0;
 }
 
+/* ── Shared advisor character image ── */
+.advisor-char-img {
+  position: fixed;
+  bottom: -8rem;
+  right: -3rem;
+  height: 80vh;
+  width: auto;
+  object-fit: contain;
+  object-position: bottom right;
+  pointer-events: none;
+  z-index: 2;
+  filter: brightness(0.7);
+}
+
+/* ── Diplomacy: Noble image ── */
+.diplo-noble-img {
+  position: fixed;
+  bottom: -8rem;
+  right: -3rem;
+  height: 80vh;
+  width: auto;
+  object-fit: contain;
+  object-position: bottom right;
+  pointer-events: none;
+  z-index: 2;
+  filter: brightness(0.7);
+}
+
+/* ── Health: Coach image ── */
+.health-coach-img {
+  position: fixed;
+  bottom: -8rem;
+  right: -3rem;
+  height: 80vh;
+  width: auto;
+  object-fit: contain;
+  object-position: bottom right;
+  pointer-events: none;
+  z-index: 2;
+  filter: brightness(0.7);
+}
+
 /* ── Museum card: spark effect ── */
 .museum-spark {
   position: absolute;

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import RelationCard from './RelationCard';
+import nobleZig from './nobleZig.png';
 import {
   fetchRelations,
   createRelation,
@@ -73,10 +74,11 @@ function DiplomacyDashboard() {
 
   return (
     <div className="dashboard-page" style={{ '--advisor-color': '#5b8de8' }}>
+      <img src={nobleZig} alt="" className="diplo-noble-img" />
 
       <div className="dashboard-header">
         <button className="dashboard-back" onClick={() => navigate('/council')}>← Council</button>
-        <h1 className="dashboard-title">Diplomacy Advisor</h1>
+        <h1 className="dashboard-title">Noble Zigg - Diplomacy Advisor</h1>
         <button className="diplo-add-btn" onClick={() => setModalOpen(true)}>+ Add Friend</button>
       </div>
 
